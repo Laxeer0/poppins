@@ -18,14 +18,66 @@ get_header();
             <?php esc_html_e('Linee pulite, tessuti naturali e cromie neutre per un guardaroba senza stagione.', 'poppins-tailwind'); ?>
         </p>
         <div class="mt-8 flex flex-wrap justify-center gap-4">
-            <a class="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white" href="<?php echo esc_url(home_url('/shop')); ?>">
+            <a class="btn btn-primary" href="<?php echo esc_url(home_url('/shop')); ?>">
                 <?php esc_html_e('Acquista ora', 'poppins-tailwind'); ?>
             </a>
-            <a class="rounded-full border border-stone-900 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em]" href="#lookbook">
+            <a class="btn btn-outline" href="#lookbook">
                 <?php esc_html_e('Esplora lookbook', 'poppins-tailwind'); ?>
             </a>
         </div>
     </section>
+
+    <?php
+    $bags_query = new WP_Query(
+        [
+            'post_type'      => 'poppins_bag',
+            'posts_per_page' => 3,
+            'post_status'    => 'publish',
+        ],
+    );
+if ($bags_query->have_posts()) :
+    ?>
+        <section>
+            <p class="text-xs uppercase tracking-[0.5em] text-stone-500"><?php esc_html_e('Bag Poppins', 'poppins-tailwind'); ?></p>
+            <h2 class="mt-4 text-3xl font-semibold"><?php esc_html_e('Curate per te', 'poppins-tailwind'); ?></h2>
+            <div class="mt-8 grid gap-6 md:grid-cols-3">
+                <?php
+            while ($bags_query->have_posts()) :
+                $bags_query->the_post();
+                $capacity = (int) get_post_meta(get_the_ID(), '_poppins_bag_capacity', true);
+                ?>
+                    <article class="rounded-[32px] border border-stone-200 bg-white p-6 shadow-lg shadow-stone-200 transition hover:-translate-y-1">
+                        <p class="text-xs uppercase tracking-[0.4em] text-stone-500"><?php esc_html_e('Bag', 'poppins-tailwind'); ?></p>
+                        <h3 class="mt-2 text-2xl font-semibold text-stone-900">
+                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                        </h3>
+                        <p class="mt-1 text-sm uppercase tracking-[0.3em] text-stone-500">
+                            <?php
+                        printf(
+                            esc_html__('Fino a %d capi', 'poppins-tailwind'),
+                            max(1, $capacity),
+                        );
+                ?>
+                        </p>
+                        <div class="mt-3 text-stone-600">
+                            <?php the_excerpt(); ?>
+                        </div>
+                        <a class="btn btn-outline mt-4 inline-flex" href="<?php the_permalink(); ?>">
+                            <?php esc_html_e('Scopri la bag', 'poppins-tailwind'); ?>
+                        </a>
+                    </article>
+                <?php endwhile; ?>
+            </div>
+            <div class="mt-8 text-center">
+                <a class="btn btn-primary inline-flex" href="<?php echo esc_url(get_post_type_archive_link('poppins_bag')); ?>">
+                    <?php esc_html_e('Vedi tutte le bag', 'poppins-tailwind'); ?>
+                </a>
+            </div>
+        </section>
+        <?php
+        wp_reset_postdata();
+endif;
+?>
 
     <section>
         <div class="flex flex-col gap-8 md:flex-row md:items-center">
@@ -57,12 +109,12 @@ get_header();
         <h2 class="mt-4 text-3xl font-semibold"><?php esc_html_e('Moodboard urbano', 'poppins-tailwind'); ?></h2>
         <div class="mt-8 grid gap-6 md:grid-cols-2">
             <?php
-            $lookbook = [
-                ['title' => __('Soft tailoring', 'poppins-tailwind'), 'body' => __('Sagome fluide per riunioni e after-hours.', 'poppins-tailwind')],
-                ['title' => __('Resort 25 preview', 'poppins-tailwind'), 'body' => __('Linee asimmetriche e toni sabbia.', 'poppins-tailwind')],
-                ['title' => __('Night bloom', 'poppins-tailwind'), 'body' => __('Satin liquidi e gioielli minimali.', 'poppins-tailwind')],
-                ['title' => __('Knit lounge', 'poppins-tailwind'), 'body' => __('Maglieria leggera monocromatica.', 'poppins-tailwind')],
-            ];
+        $lookbook = [
+            ['title' => __('Soft tailoring', 'poppins-tailwind'), 'body' => __('Sagome fluide per riunioni e after-hours.', 'poppins-tailwind')],
+            ['title' => __('Resort 25 preview', 'poppins-tailwind'), 'body' => __('Linee asimmetriche e toni sabbia.', 'poppins-tailwind')],
+            ['title' => __('Night bloom', 'poppins-tailwind'), 'body' => __('Satin liquidi e gioielli minimali.', 'poppins-tailwind')],
+            ['title' => __('Knit lounge', 'poppins-tailwind'), 'body' => __('Maglieria leggera monocromatica.', 'poppins-tailwind')],
+        ];
 foreach ($lookbook as $card) :
     ?>
                 <article class="rounded-[32px] border border-stone-200 bg-white/70 p-8 shadow-lg shadow-stone-200">
@@ -83,7 +135,7 @@ foreach ($lookbook as $card) :
             <form class="flex flex-1 flex-col gap-4 md:flex-row" action="#" method="post">
                 <label class="sr-only" for="newsletter-email"><?php esc_html_e('Email', 'poppins-tailwind'); ?></label>
                 <input class="flex-1 rounded-full border border-stone-300 px-5 py-3 text-stone-900 focus:border-stone-500 focus:outline-none" id="newsletter-email" type="email" name="newsletter-email" placeholder="<?php esc_attr_e('La tua email', 'poppins-tailwind'); ?>">
-                <button class="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white" type="submit">
+                <button class="btn btn-primary" type="submit">
                     <?php esc_html_e('Iscrivimi', 'poppins-tailwind'); ?>
                 </button>
             </form>

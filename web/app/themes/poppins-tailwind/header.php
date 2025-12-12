@@ -39,13 +39,16 @@
         </nav>
 
         <div class="flex items-center gap-3 text-xs uppercase tracking-[0.3em]">
-            <a class="rounded-full border border-stone-900 px-4 py-2 transition hover:bg-stone-900 hover:text-white" href="<?php echo esc_url(home_url('/shop')); ?>">
+            <a class="btn btn-outline" href="<?php echo esc_url(home_url('/shop')); ?>">
                 <?php esc_html_e('Shop', 'poppins-tailwind'); ?>
             </a>
             <?php if (class_exists('WooCommerce')) : ?>
-                <a class="flex items-center gap-2 rounded-full bg-stone-900 px-4 py-2 text-white" href="<?php echo esc_url(wc_get_cart_url()); ?>">
-                    <?php esc_html_e('Bag', 'poppins-tailwind'); ?>
-                    <span class="rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold">
+                <a class="btn btn-primary relative px-4 py-3" href="<?php echo esc_url(wc_get_cart_url()); ?>" aria-label="<?php esc_attr_e('Vai al carrello', 'poppins-tailwind'); ?>">
+                    <span class="sr-only"><?php esc_html_e('Bag', 'poppins-tailwind'); ?></span>
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 9V7a5 5 0 1 1 10 0v2m-9 4v6m8-6v6M5 9h14l-1.2 11.04A2 2 0 0 1 15.81 22H8.18a2 2 0 0 1-1.99-1.96z" />
+                    </svg>
+                    <span class="absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-stone-50 px-1 text-[0.65rem] font-semibold text-stone-900">
                         <?php echo esc_html(WC()->cart ? WC()->cart->get_cart_contents_count() : 0); ?>
                     </span>
                 </a>
