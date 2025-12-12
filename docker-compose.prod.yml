@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.deploy
+    env_file:
+      - .env
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - uploads_data:/var/www/html/web/app/uploads
+
+volumes:
+  uploads_data:

@@ -1,0 +1,327 @@
+/*
+Theme Name: Poppins Atelier
+Theme URI: https://poppins.local
+Author: Poppins Studio
+Author URI: https://poppins.local
+Description: Tema personalizzato per l'ecommerce di abbigliamento Poppins basato su WooCommerce.
+Version: 1.0.0
+Text Domain: poppins
+Requires at least: 6.0
+Tested up to: 6.9
+Requires PHP: 8.0
+Tags: ecommerce, woocommerce, responsive, custom-colors
+*/
+
+:root {
+  --poppins-black: #0b0b0c;
+  --poppins-white: #ffffff;
+  --poppins-cream: #f4eee8;
+  --poppins-bronze: #c78b5f;
+  --poppins-grey: #7a7a7a;
+  --poppins-green: #0f3d3e;
+  --poppins-radius: 1.25rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  color: var(--poppins-black);
+  background-color: var(--poppins-cream);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.container {
+  width: min(1200px, 92vw);
+  margin: 0 auto;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 0;
+  gap: 1.5rem;
+}
+
+.branding {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+}
+
+.branding span {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--poppins-grey);
+  letter-spacing: 0.3rem;
+  margin-top: -0.25rem;
+}
+
+.primary-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.primary-nav a {
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  transition: background 0.3s ease;
+}
+
+.primary-nav a:hover {
+  background: rgba(11, 11, 12, 0.08);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.cart-link {
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 999px;
+  background: var(--poppins-black);
+  color: var(--poppins-white);
+  font-size: 0.85rem;
+}
+
+.cart-count {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+  background: var(--poppins-bronze);
+  color: var(--poppins-black);
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+}
+
+.hero {
+  padding: 6rem 0 4rem;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--poppins-grey);
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  margin: 0.5rem 0;
+  letter-spacing: -0.05em;
+}
+
+.hero p {
+  width: min(680px, 90vw);
+  margin: 1.25rem auto 2rem;
+  color: var(--poppins-grey);
+}
+
+.hero-ctas {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.9rem 1.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: var(--poppins-black);
+  color: var(--poppins-white);
+}
+
+.btn-outline {
+  border-color: var(--poppins-black);
+  color: var(--poppins-black);
+}
+
+.btn-primary:hover,
+.btn-outline:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(11, 11, 12, 0.15);
+}
+
+.section-heading {
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--poppins-grey);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin: 0 0 1.5rem;
+}
+
+.collections,
+.best-sellers,
+.lookbook,
+.story,
+.newsletter {
+  padding: 3rem 0;
+}
+
+.story {
+  background: var(--poppins-white);
+  border-radius: var(--poppins-radius);
+  padding: 4rem;
+  box-shadow: 0 20px 60px rgba(11, 11, 12, 0.08);
+}
+
+.story-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.lookbook-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.lookbook-card {
+  border-radius: var(--poppins-radius);
+  overflow: hidden;
+  position: relative;
+  min-height: 320px;
+  background: var(--poppins-black);
+  color: var(--poppins-white);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.lookbook-card small {
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.newsletter form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.newsletter input {
+  flex: 1;
+  padding: 0.9rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(11, 11, 12, 0.1);
+  font-size: 1rem;
+}
+
+.site-footer {
+  background: var(--poppins-black);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 2.5rem 0;
+  margin-top: 4rem;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.site-footer nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.woocommerce ul.products {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: grid;
+  gap: 1.5rem;
+}
+
+.woocommerce ul.products li.product {
+  border-radius: var(--poppins-radius);
+  background: var(--poppins-white);
+  padding: 1rem;
+  box-shadow: 0 8px 30px rgba(11, 11, 12, 0.08);
+}
+
+.woocommerce ul.products li.product .button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--poppins-black);
+  color: var(--poppins-white);
+  padding: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .site-header__inner {
+    flex-direction: column;
+  }
+
+  .primary-nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .story {
+    padding: 2.5rem;
+  }
+}

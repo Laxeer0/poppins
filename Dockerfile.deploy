@@ -1,0 +1,28 @@
+FROM composer:2 AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN rm -f .env \
+    && composer install --no-dev --prefer-dist --no-interaction --no-progress \
+        --optimize-autoloader
+
+FROM webdevops/php-nginx:8.2-alpine
+
+ENV WEB_DOCUMENT_ROOT=/var/www/html/web \
+    WEB_DOCUMENT_INDEX=index.php \
+    PHP_DISPLAY_ERRORS=0 \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_UPLOAD_MAX_FILESIZE=64M \
+    PHP_POST_MAX_SIZE=64M
+
+WORKDIR /var/www/html
+
+COPY --from=builder /app /var/www/html
+
+RUN chown -R application:application /var/www/html
+
+VOLUME ["/var/www/html/web/app/uploads"]
+
+EXPOSE 80
