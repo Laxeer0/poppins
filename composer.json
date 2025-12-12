@@ -40,7 +40,6 @@
     "roots/bedrock-disallow-indexing": "^2.0",
     "roots/wordpress": "6.9",
     "roots/wp-config": "1.0.0",
-    "wpackagist-theme/twentytwentyfive": "^1.0",
     "wpackagist-plugin/woocommerce": "^8",
     "wpackagist-plugin/add-bootstrap-tailwind-css": "^1.0"
   },
