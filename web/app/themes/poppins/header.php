@@ -29,23 +29,23 @@
                 </a>
                 <?php
             }
-            ?>
+?>
         </div>
 
         <nav class="primary-nav" aria-label="<?php esc_attr_e('Menu principale', 'poppins'); ?>">
             <?php
-            if (has_nav_menu('primary')) {
-                wp_nav_menu(
-                    [
-                        'theme_location' => 'primary',
-                        'container'      => false,
-                        'fallback_cb'    => 'poppins_menu_fallback',
-                    ]
-                );
-            } else {
-                poppins_menu_fallback();
-            }
-            ?>
+if (has_nav_menu('primary')) {
+    wp_nav_menu(
+        [
+            'theme_location' => 'primary',
+            'container'      => false,
+            'fallback_cb'    => 'poppins_menu_fallback',
+        ],
+    );
+} else {
+    poppins_menu_fallback();
+}
+?>
         </nav>
 
         <div class="header-actions">

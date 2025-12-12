@@ -16,7 +16,7 @@ function poppins_tailwind_setup(): void
         [
             'primary' => __('Menu principale', 'poppins-tailwind'),
             'footer'  => __('Menu footer', 'poppins-tailwind'),
-        ]
+        ],
     );
 }
 add_action('after_setup_theme', 'poppins_tailwind_setup');
@@ -31,7 +31,7 @@ function poppins_tailwind_enqueue_assets(): void
         'poppins-tailwind',
         get_theme_file_uri('dist/css/main.css'),
         [],
-        $theme->get('Version')
+        $theme->get('Version'),
     );
 }
 add_action('wp_enqueue_scripts', 'poppins_tailwind_enqueue_assets');

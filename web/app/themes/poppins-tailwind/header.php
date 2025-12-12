@@ -30,12 +30,12 @@
                         'container'      => false,
                         'menu_class'     => 'flex gap-6',
                         'fallback_cb'    => 'poppins_tailwind_menu_fallback',
-                    ]
+                    ],
                 );
             } else {
                 poppins_tailwind_menu_fallback();
             }
-            ?>
+?>
         </nav>
 
         <div class="flex items-center gap-3 text-xs uppercase tracking-[0.3em]">

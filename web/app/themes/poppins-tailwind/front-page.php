@@ -63,8 +63,8 @@ get_header();
                 ['title' => __('Night bloom', 'poppins-tailwind'), 'body' => __('Satin liquidi e gioielli minimali.', 'poppins-tailwind')],
                 ['title' => __('Knit lounge', 'poppins-tailwind'), 'body' => __('Maglieria leggera monocromatica.', 'poppins-tailwind')],
             ];
-            foreach ($lookbook as $card) :
-                ?>
+foreach ($lookbook as $card) :
+    ?>
                 <article class="rounded-[32px] border border-stone-200 bg-white/70 p-8 shadow-lg shadow-stone-200">
                     <h3 class="text-2xl font-semibold text-stone-900"><?php echo esc_html($card['title']); ?></h3>
                     <p class="mt-3 text-stone-600"><?php echo esc_html($card['body']); ?></p>

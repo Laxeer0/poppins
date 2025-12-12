@@ -24,5 +24,8 @@ web/.htaccess
 /vendor
 auth.json
 
+# Node
+node_modules
+
 # WP-CLI
 wp-cli.local.yml

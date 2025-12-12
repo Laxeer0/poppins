@@ -18,10 +18,10 @@
                         'theme_location' => 'footer',
                         'container'      => false,
                         'fallback_cb'    => '__return_empty_string',
-                    ]
+                    ],
                 );
             }
-            ?>
+?>
         </nav>
 
         <p><?php esc_html_e('Concepito a Milano con stoffe responsabili.', 'poppins'); ?></p>

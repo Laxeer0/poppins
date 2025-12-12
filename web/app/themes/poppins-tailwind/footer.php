@@ -17,7 +17,7 @@
                     'theme_location' => 'footer',
                     'container'      => false,
                     'menu_class'     => 'flex flex-wrap gap-4 text-xs uppercase tracking-[0.3em]',
-                ]
+                ],
             );
             ?>
         <?php endif; ?>

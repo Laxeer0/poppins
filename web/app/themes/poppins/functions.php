@@ -19,14 +19,14 @@ function poppins_setup(): void
             'width'       => 200,
             'flex-width'  => true,
             'flex-height' => true,
-        ]
+        ],
     );
 
     register_nav_menus(
         [
             'primary' => __('Menu principale', 'poppins'),
             'footer'  => __('Menu footer', 'poppins'),
-        ]
+        ],
     );
 
     add_image_size('poppins-hero', 1920, 1080, true);
@@ -42,7 +42,7 @@ function poppins_enqueue_assets(): void
         'poppins-theme',
         get_stylesheet_uri(),
         [],
-        wp_get_theme()->get('Version')
+        wp_get_theme()->get('Version'),
     );
 }
 add_action('wp_enqueue_scripts', 'poppins_enqueue_assets');
