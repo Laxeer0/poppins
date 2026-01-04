@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--ink: #003745;
+	--accent: #ff2030;
+	--bg-soft: #f9e2b0;
+	--secondary: #1f525e;
+	--radius-xl: 14px;
+	--radius-2xl: 16px;
+}
+
+@font-face {
+	font-family: '5TH AVENUE';
+	src: url('../assets/fonts/5th-avenue.woff2') format('woff2');
+	font-weight: 700;
+	font-display: swap;
+}
+
+@layer base {
+	body {
+		@apply font-sans text-[#003745] bg-[color:var(--bg-soft)];
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		@apply font-display tracking-tight;
+	}
+
+	a {
+		@apply transition-colors duration-200;
+	}
+
+	button,
+	.button,
+	input[type='submit'] {
+		@apply rounded-full border border-transparent font-bold uppercase tracking-[0.18em];
+	}
+
+	input,
+	select,
+	textarea {
+		@apply w-full rounded-[12px] border border-[#003745]/20 bg-white px-3 py-2 text-sm text-[#003745] transition focus:border-[#003745] focus:outline-none focus:ring-2 focus:ring-[#003745]/20;
+	}
+}
+
+@layer components {
+	.btn-primary {
+		@apply bg-[color:var(--accent)] text-white shadow-sm hover:-translate-y-px hover:shadow-lg;
+	}
+
+	.btn-outline {
+		@apply border border-[#003745] text-[#003745] hover:-translate-y-px hover:border-[#003745]/60 hover:shadow-sm;
+	}
+}
+
+
+
