@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class('bg-[#F9E2B0] text-[#003745]'); ?>>
+<body <?php body_class('bg-white text-[#003745]'); ?>>
 <?php wp_body_open(); ?>
 
 <header class="sticky top-0 z-40 border-b border-[#003745]/10 bg-gradient-to-bl from-white to-[#FF2030]">

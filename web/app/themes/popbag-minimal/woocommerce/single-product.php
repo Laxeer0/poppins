@@ -11,7 +11,7 @@ if (post_password_required()) {
 }
 ?>
 
-<main class="bg-[#F9E2B0]">
+<main class="bg-white">
 	<div class="mx-auto max-w-6xl px-6 py-12">
 		<?php while (have_posts()) : ?>
 			<?php the_post(); ?>

@@ -6,22 +6,14 @@ if (!defined('ABSPATH')) {
 get_header();
 
 $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/shop');
-$new_arrivals  = function_exists('popbag_get_new_arrivals') ? popbag_get_new_arrivals(6) : [];
-$best_sellers  = function_exists('popbag_get_best_sellers') ? popbag_get_best_sellers(6) : [];
-$size_terms    = function_exists('popbag_get_product_categories_cached') ? popbag_get_product_categories_cached(['number' => 3]) : [];
-$collection_map = [
-	'Small'  => 'small',
-	'Medium' => 'medium',
-	'Large'  => 'large',
-];
 ?>
 
 <main>
 	<section class="relative overflow-hidden bg-white">
 		<div class="mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center gap-10 px-6 py-16 md:flex-row md:items-center">
 			<div class="max-w-2xl space-y-6">
-				<p class="text-sm uppercase tracking-[0.3em] text-[#1F525E]">Minimal Premium</p>
-				<h1 class="font-display text-5xl font-black leading-tight text-[#003745] md:text-6xl">FILL YOUR STYLE</h1>
+				<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Minimal Premium</p>
+				<h1 class="font-display text-5xl font-black leading-tight text-[#003745] popbag-stroke-yellow md:text-6xl">FILL YOUR STYLE</h1>
 				<p class="text-lg text-[#1F525E]">Borse essenziali, tagliate per una vita urbana elegante. Colori sobri, dettagli curati, spazio per tutto.</p>
 				<div class="flex flex-wrap items-center gap-4">
 					<a href="<?php echo esc_url($shop_url); ?>" class="rounded-full bg-[#FF2030] px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md">Shop</a>
@@ -35,118 +27,153 @@ $collection_map = [
 		</div>
 	</section>
 
-	<section id="sizes" class="bg-white">
-		<div class="mx-auto max-w-6xl px-6 py-16">
-			<div class="flex items-end justify-between">
-				<div>
-					<p class="text-sm uppercase tracking-[0.3em] text-[#1F525E]">Collections</p>
-					<h2 class="mt-2 text-3xl font-black text-[#003745]">Choose your size</h2>
-				</div>
-				<a href="<?php echo esc_url($shop_url); ?>" class="text-sm font-semibold text-[#003745] underline decoration-[#FF2030] decoration-2 underline-offset-4">Vedi tutto</a>
-			</div>
-			<div class="mt-10 grid gap-6 md:grid-cols-3">
-				<?php
-				foreach ($collection_map as $label => $slug) :
-					$term_link = $shop_url;
-					foreach ($size_terms as $term) {
-						if ($term->slug === $slug) {
-							$link = get_term_link($term);
-							$term_link = is_wp_error($link) ? $shop_url : $link;
-							break;
-						}
-					}
-					?>
-					<a href="<?php echo esc_url($term_link); ?>" class="group relative overflow-hidden rounded-[16px] border border-[#003745]/10 bg-[#F9E2B0]/60 p-6 transition hover:-translate-y-1 hover:shadow-md">
-						<div class="flex items-center justify-between">
-							<div>
-								<p class="text-xs uppercase tracking-[0.2em] text-[#1F525E]">Collection</p>
-								<h3 class="mt-2 text-2xl font-black text-[#003745] group-hover:underline"><?php echo esc_html($label); ?></h3>
-								<p class="mt-2 text-sm text-[#1F525E]">Linee pulite, silhouette essenziale.</p>
-							</div>
-							<div class="flex h-14 w-14 items-center justify-center rounded-full border border-[#003745]/20 bg-white text-[#003745]">
-								<svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-									<path d="M7 9v10h10V9"></path>
-									<path d="M9 9a3 3 0 1 1 6 0"></path>
-								</svg>
-							</div>
-						</div>
-					</a>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-
-	<section class="bg-[#F9E2B0]">
-		<div class="mx-auto max-w-6xl px-6 py-16">
-			<div class="flex items-center justify-between">
-				<div>
-					<p class="text-sm uppercase tracking-[0.3em] text-[#1F525E]">New arrivals</p>
-					<h2 class="mt-2 text-3xl font-black text-[#003745]">Appena arrivati</h2>
-				</div>
-				<a href="<?php echo esc_url($shop_url); ?>" class="text-sm font-semibold text-[#003745] underline decoration-[#FF2030] decoration-2 underline-offset-4">Shop</a>
-			</div>
-			<div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-				<?php
-				if (!empty($new_arrivals)) :
-					foreach ($new_arrivals as $product) :
-						get_template_part('template-parts/product-card', null, ['product' => $product, 'show_badge' => true]);
-					endforeach;
-				else :
-					?>
-					<p class="text-[#1F525E]">Nessun prodotto disponibile.</p>
-				<?php endif; ?>
-			</div>
-		</div>
-	</section>
-
+	<?php
+	// Bags section (CPT poppins_bag) right after hero.
+	$bags_url = post_type_exists('poppins_bag') ? (string) get_post_type_archive_link('poppins_bag') : home_url('/bags/');
+	$bags = function_exists('popbag_get_bag_posts') ? popbag_get_bag_posts(12) : [];
+	?>
 	<section class="bg-white">
 		<div class="mx-auto max-w-6xl px-6 py-16">
-			<div class="flex items-center justify-between">
+			<div class="flex flex-wrap items-end justify-between gap-4">
 				<div>
-					<p class="text-sm uppercase tracking-[0.3em] text-[#1F525E]">Best sellers</p>
-					<h2 class="mt-2 text-3xl font-black text-[#003745]">Scelti da chi ama il design</h2>
+					<?php if (!empty($bags)) : ?>
+						<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
+						<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow">Scegli la tua bag</h2>
+					<?php else : ?>
+						<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
+						<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow">Bags</h2>
+					<?php endif; ?>
 				</div>
-				<a href="<?php echo esc_url($shop_url); ?>" class="text-sm font-semibold text-[#003745] underline decoration-[#FF2030] decoration-2 underline-offset-4">Vedi shop</a>
+				<a href="<?php echo esc_url($bags_url); ?>" class="text-sm font-semibold text-[#FF2030] underline decoration-[#FF2030] decoration-2 underline-offset-4">Vedi tutto</a>
 			</div>
-			<div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-				<?php
-				if (!empty($best_sellers)) :
-					foreach ($best_sellers as $product) :
-						get_template_part('template-parts/product-card', null, ['product' => $product, 'show_badge' => false]);
-					endforeach;
-				else :
-					?>
-					<p class="text-[#1F525E]">Ancora nessuna vendita registrata.</p>
-				<?php endif; ?>
+
+			<div class="mt-10" data-popbag-swiper>
+				<div class="mb-4 flex items-center justify-end gap-3">
+					<button type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745]" aria-label="<?php echo esc_attr__('Prev', 'popbag-minimal'); ?>" data-popbag-swiper-prev>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+					</button>
+					<button type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745]" aria-label="<?php echo esc_attr__('Next', 'popbag-minimal'); ?>" data-popbag-swiper-next>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+					</button>
+				</div>
+				<div class="swiper">
+					<div class="swiper-wrapper">
+						<?php if (!empty($bags)) : ?>
+							<?php foreach ($bags as $bag_post) : ?>
+								<?php if (!$bag_post instanceof WP_Post) { continue; } ?>
+								<?php
+								// Ensure template parts relying on global $post behave correctly.
+								global $post;
+								$post = $bag_post;
+								setup_postdata($post);
+								?>
+								<div class="swiper-slide h-auto">
+									<?php get_template_part('template-parts/bag-card'); ?>
+								</div>
+							<?php endforeach; ?>
+							<?php wp_reset_postdata(); ?>
+						<?php else : ?>
+							<div class="swiper-slide h-auto">
+								<div class="rounded-[16px] border border-[#003745]/10 bg-[#003745]/5 p-6 text-sm text-[#1F525E]">
+									<?php esc_html_e('No bags available yet.', 'popbag-minimal'); ?>
+								</div>
+							</div>
+						<?php endif; ?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="bg-[#003745] text-white">
-		<div class="mx-auto max-w-6xl px-6 py-16">
-			<div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-				<div>
-					<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0]">Materials / Benefits</p>
-					<h2 class="mt-2 text-3xl font-black">Fatti per durare, disegnati per restare leggeri.</h2>
+	<?php
+	// Category swipers after Bags.
+	if (function_exists('popbag_shortcode_product_swiper')) {
+		$term_link = static function (string $slug) use ($shop_url): string {
+			$term = get_term_by('slug', $slug, 'product_cat');
+			if (!$term || is_wp_error($term)) {
+				return (string) $shop_url;
+			}
+			$link = get_term_link($term);
+			return is_wp_error($link) ? (string) $shop_url : (string) $link;
+		};
+
+		$render_missing_category = static function (string $title, string $slug): void {
+			?>
+			<section class="bg-white">
+				<div class="mx-auto max-w-6xl px-6 py-16">
+					<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Categoria</p>
+					<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow"><?php echo esc_html($title); ?></h2>
+					<div class="mt-6 rounded-[16px] border border-[#003745]/10 bg-[#003745]/5 p-5 text-sm text-[#1F525E]">
+						<?php
+						printf(
+							/* translators: %s: category slug */
+							esc_html__('Categoria non trovata (slug: %s). Creala in Prodotti → Categorie e assegna prodotti pubblicati.', 'popbag-minimal'),
+							esc_html($slug)
+						);
+						?>
+					</div>
 				</div>
-				<a href="<?php echo esc_url($shop_url); ?>" class="rounded-full border border-white/30 px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:-translate-y-px hover:border-white hover:shadow-sm">Esplora materiali</a>
-			</div>
-			<div class="mt-10 grid gap-6 md:grid-cols-3">
-				<div class="rounded-[16px] border border-white/10 bg-white/5 p-6 shadow-sm">
-					<h3 class="text-lg font-bold">Pelle premium soft-touch</h3>
-					<p class="mt-3 text-sm text-[#F9E2B0]">Texture morbida, resistenza quotidiana, colori stabili nel tempo.</p>
+			</section>
+			<?php
+		};
+
+		$render_empty_category = static function (string $title, string $slug, string $cta_url): void {
+			?>
+			<section class="bg-white">
+				<div class="mx-auto max-w-6xl px-6 py-16">
+					<div class="flex flex-wrap items-end justify-between gap-4">
+						<div>
+							<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Categoria</p>
+							<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow"><?php echo esc_html($title); ?></h2>
+						</div>
+						<a href="<?php echo esc_url($cta_url); ?>" class="text-sm font-semibold text-[#FF2030] underline decoration-[#FF2030] decoration-2 underline-offset-4">Vedi categoria</a>
+					</div>
+					<div class="mt-6 rounded-[16px] border border-[#003745]/10 bg-[#003745]/5 p-5 text-sm text-[#1F525E]">
+						<?php
+						printf(
+							/* translators: %s: category slug */
+							esc_html__('Nessun prodotto pubblicato/visibile nella categoria (slug: %s).', 'popbag-minimal'),
+							esc_html($slug)
+						);
+						?>
+					</div>
 				</div>
-				<div class="rounded-[16px] border border-white/10 bg-white/5 p-6 shadow-sm">
-					<h3 class="text-lg font-bold">Spazio organizzato</h3>
-					<p class="mt-3 text-sm text-[#F9E2B0]">Scomparti puliti, zip fluide, interni chiari per trovare tutto al volo.</p>
-				</div>
-				<div class="rounded-[16px] border border-white/10 bg-white/5 p-6 shadow-sm">
-					<h3 class="text-lg font-bold">Leggerezza controllata</h3>
-					<p class="mt-3 text-sm text-[#F9E2B0]">Bordo sottile, peso contenuto, bilanciamento studiato per la giornata.</p>
-				</div>
-			</div>
-		</div>
-	</section>
+			</section>
+			<?php
+		};
+
+		$render_category_swiper = static function (string $title, string $slug) use ($term_link, $shop_url, $render_missing_category, $render_empty_category): void {
+			$term = get_term_by('slug', $slug, 'product_cat');
+			if (!$term || is_wp_error($term)) {
+				$render_missing_category($title, $slug);
+				return;
+			}
+
+			$products = function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug($slug, 12) : [];
+			$cta_url  = $term_link($slug);
+
+			if (empty($products)) {
+				$render_empty_category($title, $slug, $cta_url);
+				return;
+			}
+
+			echo popbag_shortcode_product_swiper([
+				'title'     => $title,
+				'subtitle'  => 'Categoria',
+				'source'    => 'category',
+				'category'  => $slug,
+				'limit'     => 12,
+				'cta_label' => 'Vedi categoria',
+				'cta_url'   => $cta_url ? $cta_url : (string) $shop_url,
+			]);
+		};
+
+		$render_category_swiper('Outfit Premium', 'outfit-premium');
+		$render_category_swiper('Vintage', 'vintage');
+		$render_category_swiper('Made in Italy', 'made-in-italy');
+		$render_category_swiper('Non Made in Italy', 'not-made-in-italy');
+	}
+	?>
 </main>
 
 <?php

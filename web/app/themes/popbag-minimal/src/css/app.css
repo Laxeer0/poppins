@@ -5,7 +5,7 @@
 :root {
 	--ink: #003745;
 	--accent: #ff2030;
-	--bg-soft: #f9e2b0;
+	--bg-soft: #ffffff;
 	--secondary: #1f525e;
 	--radius-xl: 14px;
 	--radius-2xl: 16px;
@@ -20,7 +20,7 @@
 
 @layer base {
 	body {
-		@apply font-sans text-[#003745] bg-[color:var(--bg-soft)];
+		@apply font-sans text-[#003745] bg-white;
 	}
 
 	h1,
@@ -54,6 +54,21 @@
 
 	.btn-outline {
 		@apply border border-[#003745] text-[#003745] hover:-translate-y-px hover:border-[#003745]/60 hover:shadow-sm;
+	}
+
+	/**
+	 * Thick outlined text helpers (requested theme style).
+	 * - Yellow text → thick blue outline
+	 * - Blue text → thick yellow outline
+	 */
+	.popbag-stroke-blue {
+		-webkit-text-stroke: 0.6px rgba(0, 55, 69, 0.95);
+		text-shadow: none;
+	}
+
+	.popbag-stroke-yellow {
+		-webkit-text-stroke: 2px rgba(249, 226, 176, 0.98);
+		text-shadow: none;
 	}
 }
 

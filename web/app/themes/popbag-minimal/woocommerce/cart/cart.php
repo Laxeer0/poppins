@@ -7,7 +7,7 @@ do_action('woocommerce_before_cart');
 <form class="woocommerce-cart-form" action="<?php echo esc_url(wc_get_cart_url()); ?>" method="post">
 	<div class="overflow-hidden rounded-[16px] border border-[#003745]/10 bg-white shadow-sm">
 		<table class="w-full border-collapse text-sm">
-			<thead class="bg-[#F9E2B0]/60 text-left uppercase tracking-[0.12em] text-[#1F525E]">
+			<thead class="bg-[#003745]/5 text-left uppercase tracking-[0.12em] text-[#1F525E]">
 				<tr>
 					<th class="px-4 py-3 font-semibold"><?php esc_html_e('Product', 'woocommerce'); ?></th>
 					<th class="px-4 py-3 font-semibold"><?php esc_html_e('Price', 'woocommerce'); ?></th>
@@ -26,7 +26,7 @@ do_action('woocommerce_before_cart');
 						<tr class="border-t border-[#003745]/10">
 							<td class="px-4 py-4">
 								<div class="flex items-center gap-4">
-									<div class="h-16 w-16 overflow-hidden rounded-[10px] border border-[#003745]/10 bg-[#F9E2B0]/40">
+									<div class="h-16 w-16 overflow-hidden rounded-[10px] border border-[#003745]/10 bg-[#003745]/5">
 										<?php
 										$thumbnail = apply_filters('woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key);
 										echo $product_permalink ? sprintf('<a href="%s">%s</a>', esc_url($product_permalink), $thumbnail) : $thumbnail; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
