@@ -16,6 +16,52 @@ if (!defined('ABSPATH')) {
 }
 
 const POPBAG_BAG_CART_META_KEY = 'popbag_bag';
+const POPBAG_BAG_CONTAINER_PRODUCT_OPTION = 'popbag_bag_container_product_id';
+
+/**
+ * Return the WooCommerce "container product" used to represent a Bag in cart.
+ *
+ * We create it only in admin (capability-gated) to avoid creating products from frontend visitors.
+ */
+function popbag_get_bag_container_product_id(): int {
+	$id = absint(get_option(POPBAG_BAG_CONTAINER_PRODUCT_OPTION));
+	if ($id > 0 && function_exists('wc_get_product')) {
+		$p = wc_get_product($id);
+		if ($p instanceof WC_Product) {
+			return $id;
+		}
+	}
+
+	// Only admins/managers can create the container product.
+	if (!is_admin() || !current_user_can('manage_woocommerce') || !class_exists('WC_Product_Simple')) {
+		return 0;
+	}
+
+	$product = new WC_Product_Simple();
+	$product->set_name(__('Bag', 'popbag-minimal'));
+	$product->set_status('publish');
+	$product->set_catalog_visibility('hidden');
+	$product->set_virtual(true);
+	$product->set_sold_individually(true);
+	$product->set_regular_price('0');
+	$product->set_price('0');
+	$new_id = (int) $product->save();
+
+	if ($new_id > 0) {
+		update_option(POPBAG_BAG_CONTAINER_PRODUCT_OPTION, $new_id, true);
+		return $new_id;
+	}
+
+	return 0;
+}
+
+// Ensure the container product exists (admin-side).
+add_action('admin_init', static function (): void {
+	if (!function_exists('WC')) {
+		return;
+	}
+	popbag_get_bag_container_product_id();
+});
 
 /**
  * Fetch published bags (CPT poppins_bag) with caching.
@@ -58,17 +104,21 @@ function popbag_get_bag_posts(int $limit = 12): array {
 /**
  * Template helper: fetch bag data from a poppins_bag post ID.
  *
- * @return array{post_id:int, slug:string, label:string, capacity:int, limits:array<int,int>}
+ * @return array{post_id:int, slug:string, label:string, capacity:int, price:float, limits:array<int,int>}
  */
 function popbag_get_bag_data(int $bag_post_id): array {
 	$slug = (string) get_post_meta($bag_post_id, '_poppins_bag_slug', true);
 	$slug = sanitize_title($slug);
+	$raw_price = (string) get_post_meta($bag_post_id, '_poppins_bag_price', true);
+	$raw_price = str_replace(',', '.', $raw_price);
+	$price = max(0, (float) $raw_price);
 
 	return [
 		'post_id'   => $bag_post_id,
 		'slug'      => $slug,
 		'label'     => get_the_title($bag_post_id),
 		'capacity'  => max(1, absint(get_post_meta($bag_post_id, '_poppins_bag_capacity', true))),
+		'price'     => $price,
 		'limits'    => (array) get_post_meta($bag_post_id, '_poppins_bag_category_limits', true),
 	];
 }
@@ -197,35 +247,89 @@ add_action('template_redirect', static function (): void {
 	}
 
 	$bag = popbag_get_bag_data($bag_post_id);
-	$group_id = wp_generate_uuid4();
 
-	foreach ($validation['product_ids'] as $product_id) {
-		$added = WC()->cart->add_to_cart(
-			$product_id,
-			1,
-			0,
-			[],
-			[
-				POPBAG_BAG_CART_META_KEY => [
-					'group_id'    => $group_id,
-					'bag_post_id' => $bag['post_id'],
-					'bag_slug'    => $bag['slug'],
-					'bag_label'   => $bag['label'],
-				],
-			]
-		);
+	$container_product_id = popbag_get_bag_container_product_id();
+	if ($container_product_id <= 0) {
+		wc_add_notice(__('Bag product is not configured yet. Please contact the shop manager.', 'popbag-minimal'), 'error');
+		wp_safe_redirect(get_permalink($bag_post_id));
+		exit;
+	}
 
-		if (!$added) {
-			wc_add_notice(__('Some items could not be added to the cart.', 'popbag-minimal'), 'error');
-			wp_safe_redirect(get_permalink($bag_post_id));
-			exit;
-		}
+	$unique = wp_generate_uuid4();
+	$added = WC()->cart->add_to_cart(
+		$container_product_id,
+		1,
+		0,
+		[],
+		[
+			POPBAG_BAG_CART_META_KEY => [
+				'unique'              => $unique,
+				'bag_post_id'          => $bag['post_id'],
+				'bag_slug'             => $bag['slug'],
+				'bag_label'            => $bag['label'],
+				'bag_price'            => (float) ($bag['price'] ?? 0),
+				'selected_product_ids' => array_map('absint', (array) $validation['product_ids']),
+			],
+		]
+	);
+
+	if (!$added) {
+		wc_add_notice(__('Some items could not be added to the cart.', 'popbag-minimal'), 'error');
+		wp_safe_redirect(get_permalink($bag_post_id));
+		exit;
 	}
 
 	wc_add_notice(__('Bag added to cart.', 'popbag-minimal'), 'success');
 	wp_safe_redirect(wc_get_cart_url());
 	exit;
 });
+
+/**
+ * Make bag cart items unique (so different selections don't merge).
+ */
+add_filter('woocommerce_add_cart_item_data', static function (array $cart_item_data, int $product_id, int $variation_id): array {
+	if (!isset($cart_item_data[POPBAG_BAG_CART_META_KEY]) || !is_array($cart_item_data[POPBAG_BAG_CART_META_KEY])) {
+		return $cart_item_data;
+	}
+	$meta = $cart_item_data[POPBAG_BAG_CART_META_KEY];
+	if (empty($meta['unique'])) {
+		return $cart_item_data;
+	}
+	$cart_item_data['unique_key'] = sanitize_text_field((string) $meta['unique']);
+	return $cart_item_data;
+}, 10, 3);
+
+/**
+ * Override cart item price for bag items.
+ */
+add_action('woocommerce_before_calculate_totals', static function (WC_Cart $cart): void {
+	if (is_admin() && !defined('DOING_AJAX')) {
+		return;
+	}
+
+	foreach ($cart->get_cart() as $key => $cart_item) {
+		$meta = $cart_item[POPBAG_BAG_CART_META_KEY] ?? null;
+		if (!is_array($meta) || !isset($meta['bag_post_id'])) {
+			continue;
+		}
+		$price = isset($meta['bag_price']) ? (float) $meta['bag_price'] : 0.0;
+		$price = max(0, $price);
+		if (isset($cart_item['data']) && $cart_item['data'] instanceof WC_Product) {
+			$cart_item['data']->set_price($price);
+		}
+	}
+}, 20, 1);
+
+/**
+ * Replace cart item name with bag label for bag items.
+ */
+add_filter('woocommerce_cart_item_name', static function (string $name, array $cart_item, string $cart_item_key): string {
+	$meta = $cart_item[POPBAG_BAG_CART_META_KEY] ?? null;
+	if (!is_array($meta) || empty($meta['bag_label'])) {
+		return $name;
+	}
+	return esc_html((string) $meta['bag_label']);
+}, 10, 3);
 
 /**
  * Show bag metadata under cart item name (cart/checkout).
@@ -241,6 +345,25 @@ add_filter('woocommerce_get_item_data', static function (array $item_data, array
 		'value' => sanitize_text_field((string) $meta['bag_label']),
 	];
 
+	$ids = isset($meta['selected_product_ids']) ? array_map('absint', (array) $meta['selected_product_ids']) : [];
+	if ($ids) {
+		$names = [];
+		if (function_exists('wc_get_product')) {
+			foreach ($ids as $pid) {
+				$p = wc_get_product($pid);
+				if ($p instanceof WC_Product) {
+					$names[] = $p->get_name();
+				}
+			}
+		}
+		if ($names) {
+			$item_data[] = [
+				'key'   => __('Capi selezionati', 'popbag-minimal'),
+				'value' => implode(', ', array_map('sanitize_text_field', $names)),
+			];
+		}
+	}
+
 	return $item_data;
 }, 10, 2);
 
@@ -254,8 +377,8 @@ add_action('woocommerce_checkout_create_order_line_item', static function ($item
 	}
 
 	$item->add_meta_data(__('Bag', 'popbag-minimal'), sanitize_text_field((string) $meta['bag_label']), true);
-	if (!empty($meta['group_id'])) {
-		$item->add_meta_data(__('Bag group', 'popbag-minimal'), sanitize_text_field((string) $meta['group_id']), true);
+	if (!empty($meta['selected_product_ids'])) {
+		$item->add_meta_data(__('Capi selezionati (IDs)', 'popbag-minimal'), implode(',', array_map('absint', (array) $meta['selected_product_ids'])), true);
 	}
 }, 10, 4);
 

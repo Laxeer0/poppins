@@ -77,6 +77,7 @@ add_action(
             function (WP_Post $post): void {
                 $capacity        = (int) get_post_meta($post->ID, '_poppins_bag_capacity', true);
                 $slug            = get_post_meta($post->ID, '_poppins_bag_slug', true);
+                $price           = (string) get_post_meta($post->ID, '_poppins_bag_price', true);
                 $category_limits = (array) get_post_meta($post->ID, '_poppins_bag_category_limits', true);
                 $categories      = get_terms(
                     [
@@ -93,6 +94,10 @@ add_action(
                 <p>
                     <label for="poppins_bag_capacity"><?php esc_html_e('Capienza massima (numero prodotti)', 'poppins'); ?></label><br>
                     <input type="number" min="1" id="poppins_bag_capacity" name="poppins_bag_capacity" value="<?php echo esc_attr($capacity ?: 1); ?>">
+                </p>
+                <p>
+                    <label for="poppins_bag_price"><?php esc_html_e('Prezzo bag', 'poppins'); ?></label><br>
+                    <input type="number" min="0" step="0.01" id="poppins_bag_price" name="poppins_bag_price" value="<?php echo esc_attr($price); ?>" class="regular-text">
                 </p>
                 <?php if ($categories && !is_wp_error($categories)) : ?>
                     <hr>
@@ -153,6 +158,9 @@ add_action(
             $slug = 'bag-' . $post_id;
         }
         $capacity = max(1, (int) ($_POST['poppins_bag_capacity'] ?? 1));
+        $raw_price = (string) ($_POST['poppins_bag_price'] ?? '');
+        $raw_price = str_replace(',', '.', $raw_price);
+        $price = max(0, (float) $raw_price);
         $limits   = [];
 
         if (!empty($_POST['poppins_bag_category_limits']) && is_array($_POST['poppins_bag_category_limits'])) {
@@ -167,6 +175,7 @@ add_action(
 
         update_post_meta($post_id, '_poppins_bag_slug', $slug);
         update_post_meta($post_id, '_poppins_bag_capacity', $capacity);
+        update_post_meta($post_id, '_poppins_bag_price', (string) $price);
         update_post_meta($post_id, '_poppins_bag_category_limits', $limits);
     },
     10,

@@ -36,6 +36,21 @@ add_action('wp_enqueue_scripts', static function (): void {
 	if (file_exists($swiper_init_path)) {
 		wp_enqueue_script('popbag-swiper-init', get_theme_file_uri($swiper_init_rel), ['popbag-swiper'], (string) filemtime($swiper_init_path), true);
 	}
+
+	// Bag builder (single poppins_bag): product cards + modal.
+	if (is_singular('poppins_bag')) {
+		$bag_css_rel  = 'assets/css/bag.css';
+		$bag_css_path = get_theme_file_path($bag_css_rel);
+		if (file_exists($bag_css_path)) {
+			wp_enqueue_style('popbag-bag', get_theme_file_uri($bag_css_rel), ['popbag-app'], (string) filemtime($bag_css_path));
+		}
+
+		$bag_js_rel  = 'assets/js/bag-builder.js';
+		$bag_js_path = get_theme_file_path($bag_js_rel);
+		if (file_exists($bag_js_path)) {
+			wp_enqueue_script('popbag-bag', get_theme_file_uri($bag_js_rel), [], (string) filemtime($bag_js_path), true);
+		}
+	}
 });
 
 
