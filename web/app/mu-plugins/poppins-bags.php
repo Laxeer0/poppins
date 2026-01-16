@@ -188,6 +188,9 @@ function poppins_get_bags(): array
             'post_status'    => is_admin() ? ['publish', 'private', 'draft', 'pending', 'future'] : 'publish',
             'orderby'        => 'title',
             'order'          => 'ASC',
+            // Evita interferenze di filtri esterni (pre_get_posts/posts_clauses) sulla query.
+            'suppress_filters' => true,
+            'no_found_rows'    => true,
         ],
     );
 
@@ -243,10 +246,11 @@ add_action(
                 <?php if (!$bags) : ?>
                     <p><?php esc_html_e('Crea una bag dal menu “Bag” per iniziare.', 'poppins'); ?></p>
                 <?php else : ?>
-                    <ul style="margin-left:1.25rem;">
-                        <?php foreach ($bags as $slug => $bag) : ?>
-                            <li style="margin-bottom:0.25rem;">
-                                <label>
+                    <p class="form-field poppins_bags_available_field">
+                        <label><?php esc_html_e('Bag', 'poppins'); ?></label>
+                        <span class="wrap" style="display:block;">
+                            <?php foreach ($bags as $slug => $bag) : ?>
+                                <label style="display:block; margin:0 0 6px;">
                                     <input type="checkbox" name="poppins_bags_available[]" value="<?php echo esc_attr($slug); ?>" <?php checked(in_array($slug, $selected, true)); ?>>
                                     <strong><?php echo esc_html($bag['label']); ?></strong>
                                     <small style="color:#777;">
@@ -256,12 +260,12 @@ add_action(
                                             __('Capienza: %d prodotti', 'poppins'),
                                             absint($bag['capacity']),
                                         );
-                            ?>
+                                        ?>
                                     </small>
                                 </label>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
+                            <?php endforeach; ?>
+                        </span>
+                    </p>
                 <?php endif; ?>
             </div>
         </div>
