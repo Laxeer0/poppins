@@ -14,7 +14,9 @@ if (!defined('ABSPATH')) {
 add_filter(
     'use_block_editor_for_post_type',
     static function (bool $use_block_editor, string $post_type): bool {
-        if ($post_type === 'poppins_bag') {
+        // We rely on classic WooCommerce product data panels (tabs/panels) for bag assignment.
+        // Disable block editor for both bags and products to ensure the UI is visible.
+        if ($post_type === 'poppins_bag' || $post_type === 'product') {
             return false;
         }
 
@@ -22,6 +24,19 @@ add_filter(
     },
     10,
     2,
+);
+
+/**
+ * Ensure WooCommerce "new product editor" (block-based) is disabled.
+ * Our UI is implemented via classic product data tabs/panels.
+ */
+add_filter(
+    'woocommerce_admin_features',
+    static function (array $features): array {
+        return array_values(array_diff($features, ['product_block_editor']));
+    },
+    10,
+    1,
 );
 
 /**
