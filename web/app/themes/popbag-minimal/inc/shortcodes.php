@@ -53,7 +53,7 @@ function popbag_shortcode_product_swiper(array $atts = []): string {
 			<div class="flex flex-wrap items-end justify-between gap-4">
 				<div>
 					<?php if ($subtitle) : ?>
-						<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue"><?php echo esc_html($subtitle); ?></p>
+						<p class="text-base uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue"><?php echo esc_html($subtitle); ?></p>
 					<?php endif; ?>
 					<?php if ($title) : ?>
 						<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow"><?php echo esc_html($title); ?></h2>

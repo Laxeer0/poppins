@@ -62,12 +62,12 @@
 	 * - Blue text → thick yellow outline
 	 */
 	.popbag-stroke-blue {
-		-webkit-text-stroke: 0.6px rgba(0, 55, 69, 0.95);
+		-webkit-text-stroke: 0.7px rgba(0, 55, 69, 0.95);
 		text-shadow: none;
 	}
 
 	.popbag-stroke-yellow {
-		-webkit-text-stroke: 2px rgba(249, 226, 176, 0.98);
+		-webkit-text-stroke: 1px rgba(249, 226, 176, 0.98);
 		text-shadow: none;
 	}
 }

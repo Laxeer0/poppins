@@ -12,7 +12,7 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 	<section class="relative overflow-hidden bg-white">
 		<div class="mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center gap-10 px-6 py-16 md:flex-row md:items-center">
 			<div class="max-w-2xl space-y-6">
-				<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Minimal Premium</p>
+				<p class="text-base uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Minimal Premium</p>
 				<h1 class="font-display text-5xl font-black leading-tight text-[#003745] popbag-stroke-yellow md:text-6xl">FILL YOUR STYLE</h1>
 				<p class="text-lg text-[#1F525E]">Borse essenziali, tagliate per una vita urbana elegante. Colori sobri, dettagli curati, spazio per tutto.</p>
 				<div class="flex flex-wrap items-center gap-4">
@@ -37,10 +37,10 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 			<div class="flex flex-wrap items-end justify-between gap-4">
 				<div>
 					<?php if (!empty($bags)) : ?>
-						<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
+						<p class="text-base uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
 						<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow">Scegli la tua bag</h2>
 					<?php else : ?>
-						<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
+						<p class="text-base uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
 						<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow">Bags</h2>
 					<?php endif; ?>
 				</div>
@@ -101,7 +101,7 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 			?>
 			<section class="bg-white">
 				<div class="mx-auto max-w-6xl px-6 py-16">
-					<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Categoria</p>
+					<p class="text-base uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Categoria</p>
 					<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow"><?php echo esc_html($title); ?></h2>
 					<div class="mt-6 rounded-[16px] border border-[#003745]/10 bg-[#003745]/5 p-5 text-sm text-[#1F525E]">
 						<?php
@@ -123,7 +123,7 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 				<div class="mx-auto max-w-6xl px-6 py-16">
 					<div class="flex flex-wrap items-end justify-between gap-4">
 						<div>
-							<p class="text-sm uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Categoria</p>
+							<p class="text-base uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Categoria</p>
 							<h2 class="mt-2 text-3xl font-black text-[#003745] popbag-stroke-yellow"><?php echo esc_html($title); ?></h2>
 						</div>
 						<a href="<?php echo esc_url($cta_url); ?>" class="text-sm font-semibold text-[#FF2030] underline decoration-[#FF2030] decoration-2 underline-offset-4">Vedi categoria</a>
@@ -168,10 +168,19 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 			]);
 		};
 
-		$render_category_swiper('Outfit Premium', 'outfit-premium');
-		$render_category_swiper('Vintage', 'vintage');
-		$render_category_swiper('Made in Italy', 'made-in-italy');
-		$render_category_swiper('Non Made in Italy', 'not-made-in-italy');
+		$homepage_categories = [
+			['Levi’s', 'levis'],
+			['Felpe', 'felpe'],
+			['Giubbotti', 'giubbotti'],
+			['Pantaloni', 'pantaloni'],
+			['Maglieria', 'maglieria'],
+			['Tute', 'tute'],
+			['Profumi', 'profumi'],
+		];
+
+		foreach ($homepage_categories as [$title, $slug]) {
+			$render_category_swiper($title, $slug);
+		}
 	}
 	?>
 </main>

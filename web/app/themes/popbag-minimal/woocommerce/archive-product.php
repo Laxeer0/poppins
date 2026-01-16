@@ -18,7 +18,7 @@ get_header('shop');
 			<div>
 				<h1 class="text-3xl font-black text-[#003745] popbag-stroke-yellow"><?php woocommerce_page_title(); ?></h1>
 				<?php if (apply_filters('woocommerce_show_page_title', true)) : ?>
-					<p class="mt-2 text-sm uppercase tracking-[0.18em] text-[#F9E2B0] popbag-stroke-blue">Shop</p>
+					<p class="mt-2 text-base uppercase tracking-[0.18em] text-[#F9E2B0] popbag-stroke-blue">Shop</p>
 				<?php endif; ?>
 			</div>
 			<div class="flex items-center gap-4">

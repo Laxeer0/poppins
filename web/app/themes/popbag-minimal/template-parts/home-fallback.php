@@ -54,36 +54,57 @@ $render_product_swiper_section([
 
 $outfit_products = function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('outfit-premium', 12) : [];
 $render_product_swiper_section([
-	'title'     => 'Outfit Premium',
+	'title'     => 'Levi’s',
 	'subtitle'  => 'Categoria',
-	'products'  => $outfit_products,
+	'products'  => function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('levis', 12) : [],
 	'cta_label' => 'Vedi categoria',
 	'cta_url'   => $shop_url,
 ]);
 
-$vintage_products = function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('vintage', 12) : [];
 $render_product_swiper_section([
-	'title'     => 'Vintage',
+	'title'     => 'Felpe',
 	'subtitle'  => 'Categoria',
-	'products'  => $vintage_products,
+	'products'  => function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('felpe', 12) : [],
 	'cta_label' => 'Vedi categoria',
 	'cta_url'   => $shop_url,
 ]);
 
-$made_in_italy_products = function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('made-in-italy', 12) : [];
 $render_product_swiper_section([
-	'title'     => 'Made in Italy',
+	'title'     => 'Giubbotti',
 	'subtitle'  => 'Categoria',
-	'products'  => $made_in_italy_products,
+	'products'  => function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('giubbotti', 12) : [],
 	'cta_label' => 'Vedi categoria',
 	'cta_url'   => $shop_url,
 ]);
 
-$not_made_in_italy_products = function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('not-made-in-italy', 12) : [];
 $render_product_swiper_section([
-	'title'     => 'Non Made in Italy',
+	'title'     => 'Pantaloni',
 	'subtitle'  => 'Categoria',
-	'products'  => $not_made_in_italy_products,
+	'products'  => function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('pantaloni', 12) : [],
+	'cta_label' => 'Vedi categoria',
+	'cta_url'   => $shop_url,
+]);
+
+$render_product_swiper_section([
+	'title'     => 'Maglieria',
+	'subtitle'  => 'Categoria',
+	'products'  => function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('maglieria', 12) : [],
+	'cta_label' => 'Vedi categoria',
+	'cta_url'   => $shop_url,
+]);
+
+$render_product_swiper_section([
+	'title'     => 'Tute',
+	'subtitle'  => 'Categoria',
+	'products'  => function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('tute', 12) : [],
+	'cta_label' => 'Vedi categoria',
+	'cta_url'   => $shop_url,
+]);
+
+$render_product_swiper_section([
+	'title'     => 'Profumi',
+	'subtitle'  => 'Categoria',
+	'products'  => function_exists('popbag_get_products_by_category_slug') ? popbag_get_products_by_category_slug('profumi', 12) : [],
 	'cta_label' => 'Vedi categoria',
 	'cta_url'   => $shop_url,
 ]);
