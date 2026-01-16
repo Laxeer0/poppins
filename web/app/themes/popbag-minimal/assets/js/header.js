@@ -29,6 +29,27 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
   });
+
+  // Mobile sub-menu toggles (accordion).
+  const bindSubmenuToggles = () => {
+    const buttons = panel?.querySelectorAll('.popbag-submenu-toggle');
+    if (!buttons || !buttons.length) return;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const li = btn.closest('li');
+        if (!li) return;
+
+        const isOpen = li.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+  };
+
+  bindSubmenuToggles();
 })();
 
 

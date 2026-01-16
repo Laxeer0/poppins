@@ -31,6 +31,11 @@
     display: block;
   }
 
+  .popbag-primary-nav .menu > .menu-item > a {
+    display: inline-flex;
+    align-items: center;
+  }
+
   .popbag-primary-nav .sub-menu .menu-item a {
     display: block;
     padding: 0.55rem 0.75rem;
@@ -50,7 +55,15 @@
   }
 }
 
-/* Mobile: keep sub-menus as a simple indented list */
+/* Mobile: accordion behavior (default closed) */
+.popbag-mobile-nav .menu > .menu-item > .sub-menu {
+  display: none;
+}
+
+.popbag-mobile-nav .menu > .menu-item.is-open > .sub-menu {
+  display: grid;
+}
+
 .popbag-mobile-nav .sub-menu {
   margin-top: 0.5rem;
   margin-left: 0.75rem;

@@ -95,5 +95,96 @@ function popbag_button_classes(string $variant = 'primary', string $size = 'md',
 	return popbag_classnames($base, $size_classes, $variant_classes, $extra);
 }
 
+/**
+ * Walker: primary navigation with dropdown support.
+ *
+ * - Adds classes/ARIA for items with children
+ * - Renders a dedicated toggle button for mobile sub-menus
+ */
+class Popbag_Walker_Primary_Nav extends Walker_Nav_Menu {
+	/**
+	 * Ensure `$args->has_children` is available in start_el.
+	 */
+	public function display_element($element, &$children_elements, $max_depth, $depth, $args, &$output) {
+		if (!$element) {
+			return;
+		}
+
+		$id_field = $this->db_fields['id'];
+		if (is_array($args) && isset($args[0]) && is_object($args[0])) {
+			$args[0]->has_children = !empty($children_elements[$element->$id_field]);
+		}
+
+		parent::display_element($element, $children_elements, $max_depth, $depth, $args, $output);
+	}
+
+	public function start_lvl(&$output, $depth = 0, $args = null) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "\n$indent<ul class=\"sub-menu popbag-sub-menu\" role=\"menu\">\n";
+	}
+
+	public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+		if (!$item instanceof WP_Post) {
+			return;
+		}
+
+		$indent = ($depth) ? str_repeat("\t", $depth) : '';
+		$classes = empty($item->classes) ? [] : (array) $item->classes;
+
+		$has_children = is_object($args) && !empty($args->has_children);
+		if ($has_children) {
+			$classes[] = 'popbag-has-dropdown';
+		}
+
+		$class_names = join(' ', array_filter(array_map('sanitize_html_class', $classes)));
+		$class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
+
+		$output .= $indent . '<li' . $class_names . '>';
+
+		$atts = [];
+		$atts['title']  = !empty($item->attr_title) ? $item->attr_title : '';
+		$atts['target'] = !empty($item->target) ? $item->target : '';
+		$atts['rel']    = !empty($item->xfn) ? $item->xfn : '';
+		$atts['href']   = !empty($item->url) ? $item->url : '';
+
+		if ($has_children) {
+			$atts['aria-haspopup'] = 'true';
+			$atts['aria-expanded'] = 'false';
+		}
+
+		$attributes = '';
+		foreach ($atts as $attr => $value) {
+			if ('' === $value) {
+				continue;
+			}
+			$value = ('href' === $attr) ? esc_url($value) : esc_attr($value);
+			$attributes .= ' ' . $attr . '="' . $value . '"';
+		}
+
+		$title = apply_filters('the_title', $item->title, $item->ID);
+		$title = apply_filters('nav_menu_item_title', $title, $item, $args, $depth);
+
+		$item_output  = is_object($args) ? ($args->before ?? '') : '';
+		$item_output .= '<a' . $attributes . '>';
+		$item_output .= (is_object($args) ? ($args->link_before ?? '') : '') . esc_html($title) . (is_object($args) ? ($args->link_after ?? '') : '');
+
+		if ($has_children) {
+			// Caret (visual indicator).
+			$item_output .= '<span class="ml-1 inline-flex items-center" aria-hidden="true"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></span>';
+		}
+
+		$item_output .= '</a>';
+
+		if ($has_children && 0 === $depth) {
+			// Mobile-only submenu toggle (handled via JS on the mobile panel).
+			$item_output .= '<button type="button" class="popbag-submenu-toggle ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] md:hidden" aria-label="' . esc_attr__('Toggle submenu', 'popbag-minimal') . '" aria-expanded="false"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></button>';
+		}
+
+		$item_output .= is_object($args) ? ($args->after ?? '') : '';
+
+		$output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+	}
+}
+
 
 

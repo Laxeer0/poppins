@@ -38,8 +38,9 @@ if (!defined('ABSPATH')) {
 					wp_nav_menu([
 						'theme_location' => 'primary',
 						'container'      => false,
-						'menu_class'     => 'flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold uppercase tracking-[0.12em]',
+						'menu_class'     => 'menu flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold uppercase tracking-[0.12em]',
 						'fallback_cb'    => false,
+						'walker'         => class_exists('Popbag_Walker_Primary_Nav') ? new Popbag_Walker_Primary_Nav() : null,
 					]);
 					?>
 				</nav>
@@ -181,8 +182,9 @@ if (!defined('ABSPATH')) {
 				wp_nav_menu([
 					'theme_location' => 'primary',
 					'container'      => false,
-					'menu_class'     => 'flex flex-col gap-3 text-base font-semibold uppercase tracking-[0.12em]',
+					'menu_class'     => 'menu flex flex-col gap-3 text-base font-semibold uppercase tracking-[0.12em]',
 					'fallback_cb'    => false,
+					'walker'         => class_exists('Popbag_Walker_Primary_Nav') ? new Popbag_Walker_Primary_Nav() : null,
 				]);
 				?>
 			</nav>
