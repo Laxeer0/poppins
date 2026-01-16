@@ -39,10 +39,6 @@ $title = get_the_title();
 					</span>
 				<?php endif; ?>
 			</div>
-
-			<?php if (get_the_excerpt()) : ?>
-				<p class="text-sm text-[#1F525E]"><?php echo esc_html(get_the_excerpt()); ?></p>
-			<?php endif; ?>
 		</a>
 
 		<div class="mt-auto pt-2">
