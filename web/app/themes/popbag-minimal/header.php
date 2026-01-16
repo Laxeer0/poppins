@@ -47,20 +47,55 @@ if (!defined('ABSPATH')) {
 
 			<!-- Right: CTAs + (mobile) hamburger -->
 			<?php $cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/cart'); ?>
+			<?php
+			$myaccount_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : wp_login_url();
+			$myaccount_url = $myaccount_url ? $myaccount_url : home_url('/');
+			?>
 			<div class="flex items-center justify-self-end gap-2 md:gap-3">
-				<form role="search" method="get" class="relative" action="<?php echo esc_url(home_url('/')); ?>">
-					<label class="sr-only" for="popbag-search">Search</label>
-					<input id="popbag-search" class="hidden" type="search" name="s" />
-					<button type="submit" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/30 hover:shadow-sm">
-						<span aria-hidden="true">
-							<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-								<circle cx="11" cy="11" r="7"></circle>
-								<path d="m16 16 4 4"></path>
-							</svg>
-						</span>
-						<span class="sr-only"><?php esc_html_e('Search', 'popbag-minimal'); ?></span>
-					</button>
-				</form>
+				<?php if (is_user_logged_in()) : ?>
+					<details class="relative">
+						<summary class="list-none">
+							<span class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/30 hover:shadow-sm" aria-label="<?php echo esc_attr__('Account', 'popbag-minimal'); ?>">
+								<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 1 0-16 0"></path>
+									<path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"></path>
+								</svg>
+								<span class="sr-only"><?php esc_html_e('Open account menu', 'popbag-minimal'); ?></span>
+							</span>
+						</summary>
+
+						<div class="absolute right-0 mt-2 w-64 overflow-hidden rounded-[16px] border border-[#003745]/10 bg-white shadow-lg">
+							<div class="border-b border-[#003745]/10 p-4">
+								<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#1F525E]"><?php esc_html_e('Account', 'popbag-minimal'); ?></p>
+								<p class="mt-1 text-sm font-black text-[#003745]">
+									<?php echo esc_html(wp_get_current_user()->display_name); ?>
+								</p>
+							</div>
+							<div class="p-2">
+								<?php if (function_exists('wc_get_account_endpoint_url')) : ?>
+									<a class="block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#003745] hover:bg-[#003745]/5" href="<?php echo esc_url(wc_get_account_endpoint_url('dashboard')); ?>"><?php esc_html_e('Dashboard', 'woocommerce'); ?></a>
+									<a class="block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#003745] hover:bg-[#003745]/5" href="<?php echo esc_url(wc_get_account_endpoint_url('orders')); ?>"><?php esc_html_e('Orders', 'woocommerce'); ?></a>
+									<a class="block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#003745] hover:bg-[#003745]/5" href="<?php echo esc_url(wc_get_account_endpoint_url('edit-address')); ?>"><?php esc_html_e('Addresses', 'woocommerce'); ?></a>
+									<a class="block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#003745] hover:bg-[#003745]/5" href="<?php echo esc_url(wc_get_account_endpoint_url('payment-methods')); ?>"><?php esc_html_e('Payment methods', 'woocommerce'); ?></a>
+									<a class="block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#003745] hover:bg-[#003745]/5" href="<?php echo esc_url(wc_get_account_endpoint_url('edit-account')); ?>"><?php esc_html_e('Account details', 'woocommerce'); ?></a>
+									<div class="my-1 border-t border-[#003745]/10"></div>
+									<a class="block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#FF2030] hover:bg-[#FF2030]/5" href="<?php echo esc_url(function_exists('wc_logout_url') ? wc_logout_url() : wp_logout_url($myaccount_url)); ?>"><?php esc_html_e('Log out', 'woocommerce'); ?></a>
+								<?php else : ?>
+									<a class="block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#003745] hover:bg-[#003745]/5" href="<?php echo esc_url($myaccount_url); ?>"><?php esc_html_e('My account', 'woocommerce'); ?></a>
+									<a class="mt-1 block rounded-[14px] px-3 py-2 text-sm font-semibold text-[#FF2030] hover:bg-[#FF2030]/5" href="<?php echo esc_url(wp_logout_url($myaccount_url)); ?>"><?php esc_html_e('Log out', 'woocommerce'); ?></a>
+								<?php endif; ?>
+							</div>
+						</div>
+					</details>
+				<?php else : ?>
+					<a class="<?php echo esc_attr(popbag_button_classes('outline', 'sm', 'h-10')); ?>" href="<?php echo esc_url($myaccount_url); ?>">
+						<?php esc_html_e('Login', 'woocommerce'); ?>
+					</a>
+					<a class="<?php echo esc_attr(popbag_button_classes('secondary', 'sm', 'h-10')); ?>" href="<?php echo esc_url($myaccount_url); ?>">
+						<?php esc_html_e('Register', 'woocommerce'); ?>
+					</a>
+				<?php endif; ?>
+
 				<a href="<?php echo esc_url($cart_url); ?>" class="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/30 hover:shadow-sm">
 					<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
 						<path d="M3 4h2l1.6 9.2a1 1 0 0 0 1 .8h7.8a1 1 0 0 0 1-.8L17 7H6"></path>
@@ -117,6 +152,31 @@ if (!defined('ABSPATH')) {
 				</button>
 			</div>
 			<nav class="px-5 py-4">
+				<div class="mb-4">
+					<?php if (is_user_logged_in()) : ?>
+						<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#1F525E]"><?php esc_html_e('Account', 'popbag-minimal'); ?></p>
+						<p class="mt-1 text-sm font-black text-[#003745]"><?php echo esc_html(wp_get_current_user()->display_name); ?></p>
+
+						<div class="mt-3 grid gap-2">
+							<?php if (function_exists('wc_get_account_endpoint_url')) : ?>
+								<a class="rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold text-[#003745]" href="<?php echo esc_url(wc_get_account_endpoint_url('dashboard')); ?>"><?php esc_html_e('Dashboard', 'woocommerce'); ?></a>
+								<a class="rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold text-[#003745]" href="<?php echo esc_url(wc_get_account_endpoint_url('orders')); ?>"><?php esc_html_e('Orders', 'woocommerce'); ?></a>
+								<a class="rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold text-[#003745]" href="<?php echo esc_url(wc_get_account_endpoint_url('edit-address')); ?>"><?php esc_html_e('Addresses', 'woocommerce'); ?></a>
+								<a class="rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold text-[#003745]" href="<?php echo esc_url(wc_get_account_endpoint_url('payment-methods')); ?>"><?php esc_html_e('Payment methods', 'woocommerce'); ?></a>
+								<a class="rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold text-[#003745]" href="<?php echo esc_url(wc_get_account_endpoint_url('edit-account')); ?>"><?php esc_html_e('Account details', 'woocommerce'); ?></a>
+								<a class="rounded-[14px] border border-[#FF2030]/20 bg-[#FF2030]/5 px-4 py-2 text-sm font-semibold text-[#FF2030]" href="<?php echo esc_url(function_exists('wc_logout_url') ? wc_logout_url() : wp_logout_url($myaccount_url)); ?>"><?php esc_html_e('Log out', 'woocommerce'); ?></a>
+							<?php else : ?>
+								<a class="rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold text-[#003745]" href="<?php echo esc_url($myaccount_url); ?>"><?php esc_html_e('My account', 'woocommerce'); ?></a>
+								<a class="rounded-[14px] border border-[#FF2030]/20 bg-[#FF2030]/5 px-4 py-2 text-sm font-semibold text-[#FF2030]" href="<?php echo esc_url(wp_logout_url($myaccount_url)); ?>"><?php esc_html_e('Log out', 'woocommerce'); ?></a>
+							<?php endif; ?>
+						</div>
+					<?php else : ?>
+						<div class="grid grid-cols-2 gap-2">
+							<a class="<?php echo esc_attr(popbag_button_classes('outline', 'sm', 'w-full')); ?>" href="<?php echo esc_url($myaccount_url); ?>"><?php esc_html_e('Login', 'woocommerce'); ?></a>
+							<a class="<?php echo esc_attr(popbag_button_classes('secondary', 'sm', 'w-full')); ?>" href="<?php echo esc_url($myaccount_url); ?>"><?php esc_html_e('Register', 'woocommerce'); ?></a>
+						</div>
+					<?php endif; ?>
+				</div>
 				<?php
 				wp_nav_menu([
 					'theme_location' => 'primary',

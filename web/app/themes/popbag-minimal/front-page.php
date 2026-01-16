@@ -45,11 +45,11 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 			<div class="flex flex-wrap items-end justify-between gap-4">
 				<div>
 					<?php if (!empty($bags)) : ?>
-						<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
+						<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bag</p>
 						<h2 class="mt-0 text-4xl font-black text-[#003745] popbag-stroke-yellow md:text-5xl">Scegli la tua bag</h2>
 					<?php else : ?>
-						<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bags</p>
-						<h2 class="mt-0 text-4xl font-black text-[#003745] popbag-stroke-yellow md:text-5xl">Bags</h2>
+						<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bag</p>
+						<h2 class="mt-0 text-4xl font-black text-[#003745] popbag-stroke-yellow md:text-5xl">Bag</h2>
 					<?php endif; ?>
 				</div>
 				<a href="<?php echo esc_url($bags_url); ?>" class="text-sm font-semibold text-[#FF2030] underline decoration-[#FF2030] decoration-2 underline-offset-4">Vedi tutto</a>

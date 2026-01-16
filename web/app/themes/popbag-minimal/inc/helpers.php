@@ -46,5 +46,54 @@ function popbag_render_site_logo(string $wrapper_class = '', string $img_class =
 	<?php
 }
 
+/**
+ * Utility: merge class strings (Tailwind-friendly).
+ *
+ * Accepts strings and arrays (nested). Removes empties and trims.
+ */
+function popbag_classnames(...$parts): string {
+	$out = [];
+	$stack = $parts;
+
+	while (!empty($stack)) {
+		$part = array_shift($stack);
+		if (is_array($part)) {
+			$stack = array_merge($part, $stack);
+			continue;
+		}
+		if (!is_string($part)) {
+			continue;
+		}
+		$part = trim($part);
+		if ($part !== '') {
+			$out[] = $part;
+		}
+	}
+
+	return trim(implode(' ', $out));
+}
+
+/**
+ * UI: consistent button classes across templates.
+ */
+function popbag_button_classes(string $variant = 'primary', string $size = 'md', string $extra = ''): string {
+	$base = 'inline-flex items-center justify-center rounded-full font-bold uppercase tracking-[0.18em] transition hover:-translate-y-px';
+
+	$size_classes = match ($size) {
+		'sm' => 'px-4 py-2 text-xs',
+		'lg' => 'px-7 py-4 text-sm',
+		default => 'px-6 py-3 text-sm',
+	};
+
+	$variant_classes = match ($variant) {
+		'secondary' => 'bg-[#003745] text-white hover:shadow-md',
+		'outline'   => 'border border-[#003745]/15 bg-white text-[#003745] hover:shadow-sm',
+		'ghost'     => 'bg-transparent text-[#003745] hover:bg-[#003745]/5',
+		default     => 'bg-[#FF2030] text-white hover:shadow-md',
+	};
+
+	return popbag_classnames($base, $size_classes, $variant_classes, $extra);
+}
+
 
 

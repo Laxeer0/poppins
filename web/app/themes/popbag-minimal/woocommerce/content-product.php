@@ -11,7 +11,7 @@ $is_new = (time() - $product->get_date_created()->getTimestamp()) < DAY_IN_SECON
 ?>
 
 <li <?php wc_product_class('h-full', $product); ?>>
-	<article class="group flex h-full flex-col rounded-[16px] border border-[#003745]/10 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+	<article class="group flex h-full flex-col rounded-[16px] border border-[#003745]/10 bg-white p-4 shadow-sm transition-transform hover:scale-[1.03] hover:shadow-lg">
 		<a href="<?php the_permalink(); ?>" class="flex flex-1 flex-col gap-4">
 			<div class="relative overflow-hidden rounded-[14px] border border-[#003745]/10 bg-[#003745]/5">
 				<?php if ($is_new) : ?>

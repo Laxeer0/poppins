@@ -186,7 +186,7 @@ while (have_posts()) :
 						</button>
 					</div>
 				<?php else : ?>
-					<p class="text-[#1F525E]"><?php esc_html_e('No products are available for this bag yet.', 'popbag-minimal'); ?></p>
+					<p class="text-[#1F525E]"><?php esc_html_e('Nessun prodotto disponibile per questa bag al momento.', 'popbag-minimal'); ?></p>
 				<?php endif; ?>
 			</form>
 

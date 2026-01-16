@@ -65,6 +65,124 @@ add_action('after_switch_theme', static function (): void {
 	if ($blog_id > 0) {
 		update_option('page_for_posts', $blog_id);
 	}
+
+	/**
+	 * Default primary menu (only if not configured yet).
+	 * Items:
+	 * - Home
+	 * - Chi siamo
+	 * - Product categories used on homepage
+	 */
+	$locations = (array) get_theme_mod('nav_menu_locations', []);
+	$primary_menu_id = isset($locations['primary']) ? absint($locations['primary']) : 0;
+	if ($primary_menu_id > 0) {
+		return;
+	}
+
+	$menu_name = 'Menu principale';
+	$menu_obj = wp_get_nav_menu_object($menu_name);
+	$menu_id = $menu_obj ? (int) $menu_obj->term_id : 0;
+	if ($menu_id <= 0) {
+		$menu_id = (int) wp_create_nav_menu($menu_name);
+	}
+	if ($menu_id <= 0) {
+		return;
+	}
+
+	// Assign to primary location.
+	$locations['primary'] = $menu_id;
+	set_theme_mod('nav_menu_locations', $locations);
+
+	// Fetch existing menu items to avoid duplicates.
+	$existing = wp_get_nav_menu_items($menu_id);
+	$existing_object_ids = [];
+	$existing_urls = [];
+	if (is_array($existing)) {
+		foreach ($existing as $item) {
+			if (!($item instanceof WP_Post)) {
+				continue;
+			}
+			$existing_object_ids[(string) ($item->object . ':' . (int) $item->object_id)] = true;
+			if (!empty($item->url)) {
+				$existing_urls[(string) $item->url] = true;
+			}
+		}
+	}
+
+	// Home item (front page if set, otherwise site root).
+	$home_target_id = (int) get_option('page_on_front', 0);
+	if ($home_target_id > 0 && empty($existing_object_ids['page:' . $home_target_id])) {
+		wp_update_nav_menu_item($menu_id, 0, [
+			'menu-item-title'     => 'Home',
+			'menu-item-object'    => 'page',
+			'menu-item-object-id' => $home_target_id,
+			'menu-item-type'      => 'post_type',
+			'menu-item-status'    => 'publish',
+		]);
+	} elseif (empty($existing_urls[home_url('/')])) {
+		wp_update_nav_menu_item($menu_id, 0, [
+			'menu-item-title'  => 'Home',
+			'menu-item-url'    => home_url('/'),
+			'menu-item-type'   => 'custom',
+			'menu-item-status' => 'publish',
+		]);
+	}
+
+	// Chi siamo page (create if missing).
+	$about = get_page_by_path('chi-siamo');
+	if (!$about) {
+		$about = get_page_by_title('Chi siamo');
+	}
+	$about_id = $about instanceof WP_Post ? (int) $about->ID : 0;
+	if ($about_id <= 0) {
+		$about_id = (int) wp_insert_post([
+			'post_type'   => 'page',
+			'post_status' => 'publish',
+			'post_title'  => 'Chi siamo',
+			'post_name'   => 'chi-siamo',
+			'post_content'=> '',
+		], true);
+	}
+	if ($about_id > 0 && empty($existing_object_ids['page:' . $about_id])) {
+		wp_update_nav_menu_item($menu_id, 0, [
+			'menu-item-title'     => 'Chi siamo',
+			'menu-item-object'    => 'page',
+			'menu-item-object-id' => $about_id,
+			'menu-item-type'      => 'post_type',
+			'menu-item-status'    => 'publish',
+		]);
+	}
+
+	// Product categories used on homepage.
+	$home_category_slugs = [
+		'levis',
+		'felpe',
+		'giubbotti',
+		'pantaloni',
+		'maglieria',
+		'tute',
+		'profumi',
+	];
+
+	if (taxonomy_exists('product_cat')) {
+		foreach ($home_category_slugs as $slug) {
+			$term = get_term_by('slug', $slug, 'product_cat');
+			if (!$term || is_wp_error($term)) {
+				continue;
+			}
+			$key = 'product_cat:' . (int) $term->term_id;
+			if (!empty($existing_object_ids[$key])) {
+				continue;
+			}
+			wp_update_nav_menu_item($menu_id, 0, [
+				'menu-item-title'     => $term->name,
+				'menu-item-object'    => 'product_cat',
+				'menu-item-object-id' => (int) $term->term_id,
+				'menu-item-type'      => 'taxonomy',
+				'menu-item-status'    => 'publish',
+			]);
+		}
+	}
 });
 
 

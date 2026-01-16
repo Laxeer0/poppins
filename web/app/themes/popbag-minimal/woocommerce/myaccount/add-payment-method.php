@@ -5,11 +5,12 @@
 defined('ABSPATH') || exit;
 ?>
 
-<div class="space-y-6">
-	<h2 class="text-xl font-black text-[#003745]"><?php esc_html_e('Add payment method', 'woocommerce'); ?></h2>
+<div class="woo-account">
+	<div class="space-y-6">
+		<h2 class="text-xl font-black text-[#003745]"><?php esc_html_e('Add payment method', 'woocommerce'); ?></h2>
 
-	<form id="add_payment_method" method="post" class="space-y-5">
-		<?php do_action('woocommerce_add_payment_method_form_start'); ?>
+		<form id="add_payment_method" method="post" class="space-y-5">
+			<?php do_action('woocommerce_add_payment_method_form_start'); ?>
 
 		<div class="rounded-[16px] border border-[#003745]/10 bg-white p-6 shadow-sm">
 			<?php
@@ -34,16 +35,17 @@ defined('ABSPATH') || exit;
 			<?php endif; ?>
 		</div>
 
-		<?php do_action('woocommerce_add_payment_method_form_end'); ?>
+			<?php do_action('woocommerce_add_payment_method_form_end'); ?>
 
-		<div class="pt-2">
-			<?php wp_nonce_field('woocommerce-add-payment-method', 'woocommerce-add-payment-method-nonce'); ?>
-			<button type="submit" class="w-full rounded-full bg-[#FF2030] px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:-translate-y-px hover:shadow-md" id="place_order" value="<?php esc_attr_e('Add payment method', 'woocommerce'); ?>">
-				<?php esc_html_e('Add payment method', 'woocommerce'); ?>
-			</button>
-			<input type="hidden" name="woocommerce_add_payment_method" id="woocommerce_add_payment_method" value="1" />
-		</div>
-	</form>
+			<div class="pt-2">
+				<?php wp_nonce_field('woocommerce-add-payment-method', 'woocommerce-add-payment-method-nonce'); ?>
+				<button type="submit" class="<?php echo esc_attr(popbag_button_classes('primary', 'md', 'w-full')); ?>" id="place_order" value="<?php esc_attr_e('Add payment method', 'woocommerce'); ?>">
+					<?php esc_html_e('Add payment method', 'woocommerce'); ?>
+				</button>
+				<input type="hidden" name="woocommerce_add_payment_method" id="woocommerce_add_payment_method" value="1" />
+			</div>
+		</form>
+	</div>
 </div>
 
 

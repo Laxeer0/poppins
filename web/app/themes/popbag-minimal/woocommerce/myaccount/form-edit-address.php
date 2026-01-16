@@ -8,20 +8,21 @@ defined('ABSPATH') || exit;
 
 $customer_id  = get_current_user_id();
 $load_address = isset($load_address) ? (string) $load_address : '';
-
-if (!$load_address) {
-	$load_address = isset($_GET['address']) ? wc_clean(wp_unslash($_GET['address'])) : 'billing'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-}
-
 $load_address = in_array($load_address, ['billing', 'shipping'], true) ? $load_address : 'billing';
 
-$countries = WC()->countries;
+// Woo passes pre-filtered fields as $address. Fallback to a basic country-based field set if not provided.
+$address_fields = [];
+if (isset($address) && is_array($address)) {
+	$address_fields = $address;
+} elseif (function_exists('WC') && WC()->countries) {
+	$countries = WC()->countries;
 
-$country_meta_key = $load_address . '_country';
-$country = (string) get_user_meta($customer_id, $country_meta_key, true);
-$country = $country ? $country : $countries->get_base_country();
+	$country_meta_key = $load_address . '_country';
+	$country          = (string) get_user_meta($customer_id, $country_meta_key, true);
+	$country          = $country ? $country : $countries->get_base_country();
 
-$address_fields = $countries->get_address_fields($country, $load_address . '_');
+	$address_fields = $countries->get_address_fields($country, $load_address . '_');
+}
 ?>
 
 <div class="space-y-6">
@@ -34,11 +35,7 @@ $address_fields = $countries->get_address_fields($country, $load_address . '_');
 
 		<div class="grid gap-4 md:grid-cols-2">
 			<?php foreach ($address_fields as $key => $field) : ?>
-				<?php
-				$default_value  = get_user_meta($customer_id, $key, true);
-				$field['value'] = wc_get_post_data_by_key($key, $default_value);
-				woocommerce_form_field($key, $field, $field['value']);
-				?>
+				<?php woocommerce_form_field($key, $field, $field['value'] ?? ''); ?>
 			<?php endforeach; ?>
 		</div>
 

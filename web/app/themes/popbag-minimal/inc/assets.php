@@ -51,6 +51,15 @@ add_action('wp_enqueue_scripts', static function (): void {
 			wp_enqueue_script('popbag-bag', get_theme_file_uri($bag_js_rel), [], (string) filemtime($bag_js_path), true);
 		}
 	}
+
+	// WooCommerce: account pages only (login/register/lost-password/dashboard/orders/etc).
+	if (function_exists('is_account_page') && is_account_page()) {
+		$account_css_rel  = 'assets/css/woo-account.css';
+		$account_css_path = get_theme_file_path($account_css_rel);
+		if (file_exists($account_css_path)) {
+			wp_enqueue_style('popbag-woo-account', get_theme_file_uri($account_css_rel), ['popbag-app'], (string) filemtime($account_css_path));
+		}
+	}
 });
 
 

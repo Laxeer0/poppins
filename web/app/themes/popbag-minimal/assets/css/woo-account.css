@@ -1,0 +1,51 @@
+/**
+ * Popbag WooCommerce Account styles (scoped).
+ *
+ * Keep this file small and isolated. Most styling should come from utility classes in templates
+ * and the global Tailwind build (dist/app.css).
+ */
+
+.woo-account :where(.woocommerce-password-strength, .woocommerce-password-hint) {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.woo-account .woocommerce-password-strength {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 55, 69, 0.1);
+  background: rgba(0, 55, 69, 0.04);
+  color: rgba(0, 55, 69, 0.9);
+}
+
+.woo-account .woocommerce-password-strength.short,
+.woo-account .woocommerce-password-strength.bad {
+  border-color: rgba(255, 32, 48, 0.25);
+  background: rgba(255, 32, 48, 0.06);
+}
+
+.woo-account .woocommerce-password-strength.good,
+.woo-account .woocommerce-password-strength.strong {
+  border-color: rgba(0, 55, 69, 0.18);
+  background: rgba(0, 55, 69, 0.06);
+}
+
+.woo-account .woocommerce-password-hint {
+  margin-top: 0.5rem;
+  color: rgba(31, 82, 94, 0.9);
+}
+
+/* Fallback for projects where sr-only utility isn't present. */
+.woo-account .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+

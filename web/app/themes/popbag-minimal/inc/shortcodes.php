@@ -75,8 +75,8 @@ function popbag_shortcode_product_swiper(array $atts = []): string {
 						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
 					</button>
 				</div>
-				<div class="swiper">
-					<div class="swiper-wrapper">
+				<div class="swiper" style="overflow: visible;">
+					<div class="swiper-wrapper" style="padding-bottom: 18px;">
 						<?php if (!empty($products)) : ?>
 							<?php foreach ($products as $product) : ?>
 								<div class="swiper-slide h-auto">
