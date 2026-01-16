@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 <body <?php body_class('bg-white text-[#003745]'); ?>>
 <?php wp_body_open(); ?>
 
-<header class="sticky top-0 z-40 border-b border-[#003745]/10 bg-gradient-to-bl from-white to-[#FF2030]">
+<header class="sticky top-0 z-40 border-b border-[#003745]/10 bg-[#FF2030]">
 	<div class="mx-auto max-w-6xl px-6 py-2 md:py-3">
 		<div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 md:grid-cols-[auto_1fr_auto]">
 			<!-- Left (desktop): logo -->
