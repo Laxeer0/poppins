@@ -21,6 +21,13 @@ add_action('wp_enqueue_scripts', static function (): void {
 		wp_enqueue_style('popbag-app', get_theme_file_uri($css_rel), [], $css_ver);
 	}
 
+	// Header dropdowns (WP menu sub-menus).
+	$nav_css_rel  = 'assets/css/nav-dropdown.css';
+	$nav_css_path = get_theme_file_path($nav_css_rel);
+	if (file_exists($nav_css_path)) {
+		wp_enqueue_style('popbag-nav-dropdown', get_theme_file_uri($nav_css_rel), ['popbag-app'], (string) filemtime($nav_css_path));
+	}
+
 	// Swiper (CDN) for carousels in the mockup.
 	wp_enqueue_style('popbag-swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], '11');
 	wp_enqueue_script('popbag-swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], '11', true);

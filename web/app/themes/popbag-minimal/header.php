@@ -33,7 +33,7 @@ if (!defined('ABSPATH')) {
 					}
 					?>
 				</div>
-				<nav class="hidden md:flex md:items-center md:justify-center">
+				<nav class="popbag-primary-nav hidden md:flex md:items-center md:justify-center">
 					<?php
 					wp_nav_menu([
 						'theme_location' => 'primary',
@@ -151,7 +151,7 @@ if (!defined('ABSPATH')) {
 					</svg>
 				</button>
 			</div>
-			<nav class="px-5 py-4">
+			<nav class="popbag-mobile-nav px-5 py-4">
 				<div class="mb-4">
 					<?php if (is_user_logged_in()) : ?>
 						<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#1F525E]"><?php esc_html_e('Account', 'popbag-minimal'); ?></p>

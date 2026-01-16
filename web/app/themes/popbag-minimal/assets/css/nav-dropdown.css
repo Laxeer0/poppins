@@ -1,0 +1,70 @@
+/**
+ * Primary navigation dropdown (scoped).
+ *
+ * WordPress renders nested ULs for menu items with children.
+ * Without CSS, sub-menus will stack and break the header layout.
+ */
+
+/* Desktop dropdown behavior */
+@media (min-width: 768px) {
+  .popbag-primary-nav .menu > .menu-item {
+    position: relative;
+  }
+
+  .popbag-primary-nav .menu > .menu-item > .sub-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 14rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 55, 69, 0.1);
+    background: #fff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.14);
+    z-index: 60;
+  }
+
+  .popbag-primary-nav .menu > .menu-item:hover > .sub-menu,
+  .popbag-primary-nav .menu > .menu-item:focus-within > .sub-menu {
+    display: block;
+  }
+
+  .popbag-primary-nav .sub-menu .menu-item a {
+    display: block;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #003745;
+    white-space: nowrap;
+  }
+
+  .popbag-primary-nav .sub-menu .menu-item a:hover,
+  .popbag-primary-nav .sub-menu .menu-item a:focus-visible {
+    background: rgba(0, 55, 69, 0.05);
+    outline: none;
+  }
+}
+
+/* Mobile: keep sub-menus as a simple indented list */
+.popbag-mobile-nav .sub-menu {
+  margin-top: 0.5rem;
+  margin-left: 0.75rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(0, 55, 69, 0.12);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.popbag-mobile-nav .sub-menu a {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #003745;
+}
+
