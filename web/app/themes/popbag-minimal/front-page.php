@@ -11,11 +11,11 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 <main>
 	<section class="relative overflow-hidden bg-white">
 		<div class="mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center gap-10 px-6 py-16 md:flex-row md:items-center">
-			<div class="max-w-2xl space-y-4">
+			<div class="max-w-2xl space-y-4 text-center md:text-left">
 				<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Scopri la bag</p>
 				<h1 class="font-display text-5xl font-black leading-tight text-[#003745] popbag-stroke-yellow md:text-6xl">Crea la tua Bag</h1>
 				<p class="text-lg text-[#1F525E]">Scegli una bag, seleziona i capi disponibili e aggiungila al carrello: paghi solo il prezzo della bag e trovi al suo interno l’elenco dei capi scelti.</p>
-				<div class="pt-2 flex flex-wrap items-center gap-3">
+				<div class="flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
 					<a href="<?php echo esc_url(post_type_exists('poppins_bag') ? (string) get_post_type_archive_link('poppins_bag') : home_url('/bags/')); ?>" class="rounded-full bg-[#FF2030] px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white shadow-sm transition hover:-translate-y-px hover:shadow-md">Scopri le bag</a>
 					<a href="<?php echo esc_url($shop_url); ?>" class="rounded-full border border-[#003745] px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/60 hover:shadow-sm">Vedi lo shop</a>
 				</div>
@@ -30,7 +30,6 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 						decoding="async"
 					/>
 				</div>
-				<div class="absolute -left-6 -top-6 rounded-full border-2 border-[#FF2030] bg-white px-4 py-2 text-xs font-semibold tracking-[0.2em] text-[#FF2030] shadow-sm">PopBag</div>
 			</div>
 		</div>
 	</section>
@@ -58,10 +57,10 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 			<div class="mt-10" data-popbag-swiper>
 				<div class="mb-4 flex items-center justify-end gap-3">
 					<button type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745]" aria-label="<?php echo esc_attr__('Prev', 'popbag-minimal'); ?>" data-popbag-swiper-prev>
-						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
 					</button>
 					<button type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745]" aria-label="<?php echo esc_attr__('Next', 'popbag-minimal'); ?>" data-popbag-swiper-next>
-						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
 					</button>
 				</div>
 				<div class="swiper" style="overflow: visible;">

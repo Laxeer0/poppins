@@ -12,7 +12,7 @@ $search_query = get_search_query();
 <form role="search" method="get" class="relative" action="<?php echo esc_url(home_url('/')); ?>">
 	<label class="sr-only" for="woocommerce-product-search-field"><?php esc_html_e('Search products:', 'woocommerce'); ?></label>
 	<div class="flex items-center gap-2 rounded-full border border-[#003745]/15 bg-white px-3 py-2 shadow-sm">
-		<svg class="h-4 w-4 text-[#1F525E]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+		<svg class="h-4 w-4 text-[#1F525E]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
 			<circle cx="11" cy="11" r="7"></circle>
 			<path d="m16 16 4 4"></path>
 		</svg>

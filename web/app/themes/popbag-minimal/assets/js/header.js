@@ -1,27 +1,33 @@
 (() => {
-  const toggle = document.querySelector('[data-popbag-menu-toggle]');
+  const toggles = document.querySelectorAll('[data-popbag-menu-toggle]');
   const panel = document.querySelector('[data-popbag-menu-panel]');
   const backdrop = document.querySelector('[data-popbag-menu-backdrop]');
 
-  if (!toggle || !panel) return;
+  if (!toggles.length || !panel) return;
+
+  const setExpanded = (value) => {
+    toggles.forEach((t) => t.setAttribute('aria-expanded', value ? 'true' : 'false'));
+  };
 
   const open = () => {
     panel.classList.remove('hidden');
     backdrop?.classList.remove('hidden');
-    toggle.setAttribute('aria-expanded', 'true');
+    setExpanded(true);
     document.documentElement.classList.add('overflow-hidden');
   };
 
   const close = () => {
     panel.classList.add('hidden');
     backdrop?.classList.add('hidden');
-    toggle.setAttribute('aria-expanded', 'false');
+    setExpanded(false);
     document.documentElement.classList.remove('overflow-hidden');
   };
 
-  toggle.addEventListener('click', () => {
-    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-    isOpen ? close() : open();
+  toggles.forEach((t) => {
+    t.addEventListener('click', () => {
+      const isOpen = panel.classList.contains('hidden') === false;
+      isOpen ? close() : open();
+    });
   });
 
   backdrop?.addEventListener('click', close);

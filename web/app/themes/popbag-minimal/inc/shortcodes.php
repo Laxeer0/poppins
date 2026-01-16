@@ -69,10 +69,10 @@ function popbag_shortcode_product_swiper(array $atts = []): string {
 			<div class="mt-10" data-popbag-swiper>
 				<div class="mb-4 flex items-center justify-end gap-3">
 					<button type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745]" aria-label="<?php echo esc_attr__('Prev', 'popbag-minimal'); ?>" data-popbag-swiper-prev>
-						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
 					</button>
 					<button type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745]" aria-label="<?php echo esc_attr__('Next', 'popbag-minimal'); ?>" data-popbag-swiper-next>
-						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
 					</button>
 				</div>
 				<div class="swiper" style="overflow: visible;">

@@ -170,14 +170,14 @@ class Popbag_Walker_Primary_Nav extends Walker_Nav_Menu {
 
 		if ($has_children) {
 			// Caret (visual indicator).
-			$item_output .= '<span class="ml-1 inline-flex items-center" aria-hidden="true"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></span>';
+			$item_output .= '<span class="ml-1 inline-flex items-center" aria-hidden="true"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></span>';
 		}
 
 		$item_output .= '</a>';
 
 		if ($has_children && 0 === $depth) {
 			// Mobile-only submenu toggle (handled via JS on the mobile panel).
-			$item_output .= '<button type="button" class="popbag-submenu-toggle ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] md:hidden" aria-label="' . esc_attr__('Toggle submenu', 'popbag-minimal') . '" aria-expanded="false"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></button>';
+			$item_output .= '<button type="button" class="popbag-submenu-toggle ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] md:hidden" aria-label="' . esc_attr__('Toggle submenu', 'popbag-minimal') . '" aria-expanded="false"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></button>';
 		}
 
 		$item_output .= is_object($args) ? ($args->after ?? '') : '';
