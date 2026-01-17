@@ -10,7 +10,7 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 
 <main>
 	<section class="relative overflow-hidden bg-white">
-		<div class="mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center gap-10 px-6 py-16 md:flex-row md:items-center">
+		<div class="mx-auto flex min-h-[calc(100svh-88px)] max-w-6xl flex-col justify-center gap-10 px-6 py-12 md:min-h-[70vh] md:flex-row md:items-center md:py-16">
 			<div class="max-w-2xl space-y-4 text-center md:text-left">
 				<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Scopri la bag</p>
 				<h1 class="font-display text-5xl font-black leading-tight text-[#003745] popbag-stroke-yellow md:text-6xl">Crea la tua Bag</h1>
@@ -20,7 +20,7 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 					<a href="<?php echo esc_url($shop_url); ?>" class="rounded-full border border-[#003745] px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/60 hover:shadow-sm">Vedi lo shop</a>
 				</div>
 			</div>
-			<div class="relative w-full max-w-md self-end">
+			<div class="relative w-full max-w-md self-center md:self-end">
 				<div class="overflow-hidden rounded-[16px] border border-[#003745]/10 bg-white shadow-sm">
 					<img
 						src="<?php echo esc_url(function_exists('popbag_asset_uri') ? popbag_asset_uri('assets/images/hero.png') : get_theme_file_uri('assets/images/hero.png')); ?>"

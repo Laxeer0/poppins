@@ -22,13 +22,15 @@ if (!defined('ABSPATH')) {
 			$myaccount_url = $myaccount_url ? $myaccount_url : home_url('/');
 			?>
 			<div class="order-3 flex items-center justify-end gap-2 md:order-3 md:justify-self-end md:gap-3">
-				<a class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/30 hover:shadow-sm md:hidden" href="<?php echo esc_url($myaccount_url); ?>" aria-label="<?php echo esc_attr__('My account', 'woocommerce'); ?>">
-					<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 1 0-16 0"></path>
-						<path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"></path>
-					</svg>
-					<span class="sr-only"><?php esc_html_e('My account', 'woocommerce'); ?></span>
-				</a>
+				<?php if (is_user_logged_in()) : ?>
+					<a class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/30 hover:shadow-sm" href="<?php echo esc_url($myaccount_url); ?>" aria-label="<?php echo esc_attr__('My account', 'woocommerce'); ?>">
+						<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 1 0-16 0"></path>
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"></path>
+						</svg>
+						<span class="sr-only"><?php esc_html_e('My account', 'woocommerce'); ?></span>
+					</a>
+				<?php endif; ?>
 
 				<?php if (!is_user_logged_in()) : ?>
 					<a class="hidden md:inline-flex <?php echo esc_attr(popbag_button_classes('outline', 'sm', 'h-10')); ?>" href="<?php echo esc_url($myaccount_url); ?>">
@@ -126,6 +128,36 @@ if (!defined('ABSPATH')) {
 				</button>
 			</div>
 			<nav class="popbag-mobile-nav px-5 py-4">
+				<?php if (!is_user_logged_in()) : ?>
+					<div class="mb-4 grid grid-cols-2 gap-2">
+						<a class="flex items-center justify-center gap-2 rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#003745]" href="<?php echo esc_url($myaccount_url); ?>">
+							<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4v4"></path>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M10 14 21 3"></path>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
+							</svg>
+							<span><?php esc_html_e('Login', 'woocommerce'); ?></span>
+						</a>
+						<a class="flex items-center justify-center gap-2 rounded-[14px] bg-[#003745] px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-white" href="<?php echo esc_url($myaccount_url); ?>">
+							<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14"></path>
+								<path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"></path>
+							</svg>
+							<span><?php esc_html_e('Register', 'woocommerce'); ?></span>
+						</a>
+					</div>
+				<?php else : ?>
+					<div class="mb-4">
+						<p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#1F525E]"><?php esc_html_e('Account', 'woocommerce'); ?></p>
+						<div class="mt-3 grid gap-2">
+							<?php foreach (wc_get_account_menu_items() as $endpoint => $label) : ?>
+								<a class="rounded-[14px] border border-[#003745]/10 bg-white px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#003745]" href="<?php echo esc_url(wc_get_account_endpoint_url($endpoint)); ?>">
+									<?php echo esc_html($label); ?>
+								</a>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php endif; ?>
 				<?php
 				wp_nav_menu([
 					'theme_location' => 'primary',

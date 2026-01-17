@@ -10,6 +10,8 @@ while (have_posts()) :
 	$bag_post_id = get_the_ID();
 	$bag = function_exists('popbag_get_bag_data') ? popbag_get_bag_data($bag_post_id) : ['capacity' => 1, 'limits' => [], 'slug' => '', 'label' => get_the_title(), 'post_id' => $bag_post_id];
 	$products_ids = function_exists('poppins_get_products_for_bag_post') ? poppins_get_products_for_bag_post($bag_post_id) : [];
+	$or_pairs = isset($bag['or_pairs']) && is_array($bag['or_pairs']) ? $bag['or_pairs'] : [];
+	$modes = function_exists('popbag_normalize_bag_modes') ? popbag_normalize_bag_modes((array) ($bag['modes'] ?? [])) : [];
 
 	$back_url = wp_get_referer();
 	if (!$back_url) {
@@ -61,8 +63,30 @@ while (have_posts()) :
 			<form method="post" class="mt-8">
 				<?php wp_nonce_field('popbag_add_bag_to_cart', 'popbag_bag_nonce'); ?>
 
+				<?php if (!empty($modes)) : ?>
+					<div class="popbag-bag-modes" data-popbag-modes="<?php echo esc_attr(wp_json_encode($modes)); ?>">
+						<p class="popbag-bag-modes__title"><?php esc_html_e('Scegli modalità', 'popbag-minimal'); ?></p>
+						<div class="popbag-bag-modes__options">
+							<?php foreach ($modes as $i => $mode) : ?>
+								<label class="popbag-bag-mode">
+									<input type="radio" name="popbag_bag_mode" value="<?php echo esc_attr((string) (int) $i); ?>" <?php checked(0 === (int) $i); ?>>
+									<span><?php echo esc_html((string) ($mode['label'] ?? '')); ?></span>
+								</label>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php else : ?>
+					<input type="hidden" name="popbag_bag_mode" value="-1">
+				<?php endif; ?>
+
+				<div class="popbag-bag-notice" id="popbag-bag-notice" hidden role="status" aria-live="polite"></div>
+
 				<?php if ($products_ids) : ?>
-					<div class="popbag-bag-grid" aria-label="<?php echo esc_attr__('Prodotti selezionabili', 'popbag-minimal'); ?>">
+					<div
+						class="popbag-bag-grid"
+						aria-label="<?php echo esc_attr__('Prodotti selezionabili', 'popbag-minimal'); ?>"
+						data-popbag-or-pairs="<?php echo esc_attr(wp_json_encode($or_pairs)); ?>"
+					>
 						<?php foreach ($products_ids as $product_id) :
 							$product = function_exists('wc_get_product') ? wc_get_product($product_id) : null;
 							if (!$product) {
@@ -70,6 +94,11 @@ while (have_posts()) :
 							}
 
 							$image_html = $product->get_image('woocommerce_single', ['class' => '']);
+							$cat_ids = wp_get_post_terms($product_id, 'product_cat', ['fields' => 'ids']);
+							if (is_wp_error($cat_ids)) {
+								$cat_ids = [];
+							}
+							$cat_ids = array_values(array_filter(array_map('absint', (array) $cat_ids)));
 							?>
 
 							<input
@@ -78,6 +107,7 @@ while (have_posts()) :
 								value="<?php echo esc_attr($product_id); ?>"
 								class="popbag-product-checkbox"
 								data-product-id="<?php echo esc_attr($product_id); ?>"
+								data-product-cats="<?php echo esc_attr(implode(',', $cat_ids)); ?>"
 								<?php checked(in_array((int) $product_id, $prefill_ids, true)); ?>
 								style="position:absolute;left:-9999px;"
 							/>

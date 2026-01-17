@@ -104,7 +104,7 @@ function popbag_get_bag_posts(int $limit = 12): array {
 /**
  * Template helper: fetch bag data from a poppins_bag post ID.
  *
- * @return array{post_id:int, slug:string, label:string, capacity:int, price:float, limits:array<int,int>}
+ * @return array{post_id:int, slug:string, label:string, capacity:int, price:float, limits:array<int,int>, or_pairs:array, modes:array}
  */
 function popbag_get_bag_data(int $bag_post_id): array {
 	$slug = (string) get_post_meta($bag_post_id, '_poppins_bag_slug', true);
@@ -120,7 +120,158 @@ function popbag_get_bag_data(int $bag_post_id): array {
 		'capacity'  => max(1, absint(get_post_meta($bag_post_id, '_poppins_bag_capacity', true))),
 		'price'     => $price,
 		'limits'    => (array) get_post_meta($bag_post_id, '_poppins_bag_category_limits', true),
+		'or_pairs'  => (array) get_post_meta($bag_post_id, '_poppins_bag_category_or_pairs', true),
+		'modes'     => (array) get_post_meta($bag_post_id, '_poppins_bag_selection_modes', true),
 	];
+}
+
+/**
+ * Normalize modes from meta (defensive).
+ *
+ * @param array $raw_modes
+ * @return array<int, array{label:string,min_items:int,max_items:int,groups:array<int,array{cats:int[],min:int,max:int}>}>
+ */
+function popbag_normalize_bag_modes(array $raw_modes): array {
+	$out = [];
+	foreach ($raw_modes as $mode) {
+		if (!is_array($mode)) {
+			continue;
+		}
+		$label = sanitize_text_field((string) ($mode['label'] ?? ''));
+		$min_items = max(0, (int) ($mode['min_items'] ?? 0));
+		$max_items = max(0, (int) ($mode['max_items'] ?? 0));
+		if ($label === '' || $max_items <= 0) {
+			continue;
+		}
+		$groups = isset($mode['groups']) && is_array($mode['groups']) ? $mode['groups'] : [];
+		$groups_out = [];
+		foreach ($groups as $g) {
+			if (!is_array($g)) {
+				continue;
+			}
+			$cats = isset($g['cats']) && is_array($g['cats']) ? array_values(array_filter(array_map('absint', $g['cats']))) : [];
+			$gmin = max(0, (int) ($g['min'] ?? 0));
+			$gmax = max(0, (int) ($g['max'] ?? 0));
+			if (!$cats || $gmax <= 0) {
+				continue;
+			}
+			if ($gmin > $gmax) {
+				$gmin = $gmax;
+			}
+			$groups_out[] = ['cats' => $cats, 'min' => $gmin, 'max' => $gmax];
+		}
+		if (!$groups_out) {
+			continue;
+		}
+		$out[] = [
+			'label' => $label,
+			'min_items' => $min_items,
+			'max_items' => $max_items,
+			'groups' => $groups_out,
+		];
+	}
+	return $out;
+}
+
+/**
+ * Validate selected products against a bag mode.
+ *
+ * @param array{label:string,min_items:int,max_items:int,groups:array<int,array{cats:int[],min:int,max:int}>} $mode
+ * @param int[] $selected
+ * @param array<int,int[]> $terms_by_product
+ * @return array{ok:bool,message:string}
+ */
+function popbag_validate_bag_mode(array $mode, array $selected, array $terms_by_product): array {
+	$sel_count = count($selected);
+	$min_items = max(0, (int) ($mode['min_items'] ?? 0));
+	$max_items = max(1, (int) ($mode['max_items'] ?? 1));
+	if ($sel_count < $min_items || $sel_count > $max_items) {
+		return [
+			'ok' => false,
+			'message' => sprintf(
+				/* translators: 1: min items, 2: max items */
+				__('Questa modalità richiede tra %1$d e %2$d capi.', 'popbag-minimal'),
+				$min_items,
+				$max_items,
+			),
+		];
+	}
+
+	$groups = isset($mode['groups']) && is_array($mode['groups']) ? $mode['groups'] : [];
+	$allowed = [];
+	foreach ($groups as $g) {
+		foreach ((array) ($g['cats'] ?? []) as $cat) {
+			$cat = absint($cat);
+			if ($cat > 0) {
+				$allowed[$cat] = true;
+			}
+		}
+	}
+
+	// Every selected product must belong to at least one allowed category.
+	foreach ($selected as $product_id) {
+		$terms = $terms_by_product[$product_id] ?? [];
+		$ok = false;
+		foreach ($terms as $t) {
+			if (isset($allowed[$t])) {
+				$ok = true;
+				break;
+			}
+		}
+		if (!$ok) {
+			return [
+				'ok' => false,
+				'message' => __('Hai selezionato un capo non permesso per questa modalità.', 'popbag-minimal'),
+			];
+		}
+	}
+
+	// Group constraints.
+	foreach ($groups as $g) {
+		$cats = isset($g['cats']) && is_array($g['cats']) ? array_values(array_filter(array_map('absint', $g['cats']))) : [];
+		$gmin = max(0, absint($g['min'] ?? 0));
+		$gmax = max(0, absint($g['max'] ?? 0));
+		if (!$cats || $gmax <= 0) {
+			continue;
+		}
+		if ($gmin > $gmax) {
+			$gmin = $gmax;
+		}
+
+		$count = 0;
+		foreach ($selected as $product_id) {
+			$terms = $terms_by_product[$product_id] ?? [];
+			foreach ($cats as $cat) {
+				if (in_array($cat, $terms, true)) {
+					$count++;
+					break;
+				}
+			}
+		}
+
+		if ($count < $gmin || $count > $gmax) {
+			$names = [];
+			foreach ($cats as $cat_id) {
+				$term = get_term($cat_id, 'product_cat');
+				if ($term && !is_wp_error($term)) {
+					$names[] = $term->name;
+				}
+			}
+			$label = $names ? implode(' / ', $names) : __('(categorie)', 'popbag-minimal');
+			return [
+				'ok' => false,
+				'message' => sprintf(
+					/* translators: 1: categories label, 2: min, 3: max */
+					__('Selezione non valida per %1$s: min %2$d, max %3$d.', 'popbag-minimal'),
+					(string) $label,
+					$gmin,
+					$gmax,
+				),
+			];
+		}
+	}
+
+	return ['ok' => true, 'message' => ''];
 }
 
 /**
@@ -128,7 +279,7 @@ function popbag_get_bag_data(int $bag_post_id): array {
  *
  * @return array{ok:bool, message:string, product_ids:int[]}
  */
-function popbag_validate_bag_selection(int $bag_post_id, array $raw_product_ids): array {
+function popbag_validate_bag_selection(int $bag_post_id, array $raw_product_ids, int $mode_index = -1): array {
 	if (!function_exists('poppins_get_products_for_bag_post')) {
 		return ['ok' => false, 'message' => __('Bag feature is not available.', 'popbag-minimal'), 'product_ids' => []];
 	}
@@ -185,13 +336,35 @@ function popbag_validate_bag_selection(int $bag_post_id, array $raw_product_ids)
 		}
 	}
 
+	// Cache product categories for selected products (ids).
+	$terms_by_product = [];
+	foreach ($selected as $product_id) {
+		$terms = wp_get_post_terms($product_id, 'product_cat', ['fields' => 'ids']);
+		if (is_wp_error($terms)) {
+			$terms = [];
+		}
+		$terms_by_product[$product_id] = array_values(array_filter(array_map('absint', (array) $terms)));
+	}
+
+	// Advanced selection modes (if configured).
+	$modes = popbag_normalize_bag_modes((array) ($bag['modes'] ?? []));
+	if ($modes) {
+		$idx = $mode_index;
+		if ($idx < 0 || !isset($modes[$idx])) {
+			$idx = 0;
+		}
+		$mode = $modes[$idx];
+		$res = popbag_validate_bag_mode($mode, $selected, $terms_by_product);
+		if (!$res['ok']) {
+			return ['ok' => false, 'message' => $res['message'], 'product_ids' => []];
+		}
+		return ['ok' => true, 'message' => '', 'product_ids' => $selected];
+	}
+
 	if ($limits) {
 		$counts = [];
 		foreach ($selected as $product_id) {
-			$terms = wp_get_post_terms($product_id, 'product_cat', ['fields' => 'ids']);
-			if (is_wp_error($terms)) {
-				continue;
-			}
+			$terms = $terms_by_product[$product_id] ?? [];
 			foreach ($terms as $term_id) {
 				$term_id = absint($term_id);
 				if (!isset($limits[$term_id])) {
@@ -207,6 +380,51 @@ function popbag_validate_bag_selection(int $bag_post_id, array $raw_product_ids)
 						'message' => sprintf(__('Category limit exceeded: %1$s (max %2$d).', 'popbag-minimal'), $name, $limits[$term_id]),
 						'product_ids' => [],
 					];
+				}
+			}
+		}
+	}
+
+	// OR category pairs: max 1 product across the two categories (A OR B).
+	$raw_pairs = (array) ($bag['or_pairs'] ?? []);
+	$or_pairs = [];
+	foreach ($raw_pairs as $row) {
+		if (!is_array($row)) {
+			continue;
+		}
+		$a = isset($row['a']) ? absint($row['a']) : (isset($row[0]) ? absint($row[0]) : 0);
+		$b = isset($row['b']) ? absint($row['b']) : (isset($row[1]) ? absint($row[1]) : 0);
+		if ($a > 0 && $b > 0 && $a !== $b) {
+			$or_pairs[] = ['a' => $a, 'b' => $b];
+		}
+	}
+
+	if ($or_pairs) {
+		foreach ($or_pairs as $pair) {
+			$a = (int) $pair['a'];
+			$b = (int) $pair['b'];
+			$count = 0;
+
+			foreach ($selected as $product_id) {
+				$terms = $terms_by_product[$product_id] ?? [];
+				if (in_array($a, $terms, true) || in_array($b, $terms, true)) {
+					$count++;
+					if ($count > 1) {
+						$term_a = get_term($a, 'product_cat');
+						$term_b = get_term($b, 'product_cat');
+						$name_a = ($term_a && !is_wp_error($term_a)) ? $term_a->name : (string) $a;
+						$name_b = ($term_b && !is_wp_error($term_b)) ? $term_b->name : (string) $b;
+						return [
+							'ok' => false,
+							'message' => sprintf(
+								/* translators: 1: category A name, 2: category B name */
+								__('Puoi scegliere al massimo 1 capo tra %1$s oppure %2$s.', 'popbag-minimal'),
+								(string) $name_a,
+								(string) $name_b,
+							),
+							'product_ids' => [],
+						];
+					}
 				}
 			}
 		}
@@ -239,7 +457,8 @@ add_action('template_redirect', static function (): void {
 	}
 
 	$raw_ids = (array) ($_POST['popbag_bag_products'] ?? []);
-	$validation = popbag_validate_bag_selection($bag_post_id, $raw_ids);
+	$mode_index = isset($_POST['popbag_bag_mode']) ? (int) $_POST['popbag_bag_mode'] : -1;
+	$validation = popbag_validate_bag_selection($bag_post_id, $raw_ids, $mode_index);
 	if (!$validation['ok']) {
 		wc_add_notice($validation['message'], 'error');
 		wp_safe_redirect(get_permalink($bag_post_id));
@@ -256,6 +475,15 @@ add_action('template_redirect', static function (): void {
 	}
 
 	$unique = wp_generate_uuid4();
+	$modes = popbag_normalize_bag_modes((array) ($bag['modes'] ?? []));
+	$mode_label = '';
+	if ($modes) {
+		$idx = $mode_index;
+		if ($idx < 0 || !isset($modes[$idx])) {
+			$idx = 0;
+		}
+		$mode_label = (string) ($modes[$idx]['label'] ?? '');
+	}
 	$added = WC()->cart->add_to_cart(
 		$container_product_id,
 		1,
@@ -268,6 +496,7 @@ add_action('template_redirect', static function (): void {
 				'bag_slug'             => $bag['slug'],
 				'bag_label'            => $bag['label'],
 				'bag_price'            => (float) ($bag['price'] ?? 0),
+				'bag_mode'             => $mode_label,
 				'selected_product_ids' => array_map('absint', (array) $validation['product_ids']),
 			],
 		]
@@ -333,6 +562,13 @@ add_filter('woocommerce_get_item_data', static function (array $item_data, array
 		'key'   => __('Bag', 'popbag-minimal'),
 		'value' => sanitize_text_field((string) $meta['bag_label']),
 	];
+
+	if (!empty($meta['bag_mode'])) {
+		$item_data[] = [
+			'key'   => __('Modalità', 'popbag-minimal'),
+			'value' => sanitize_text_field((string) $meta['bag_mode']),
+		];
+	}
 
 	// Edit link (most reliable place in this theme, since cart template prints formatted item data).
 	$bag_post_id = isset($meta['bag_post_id']) ? absint($meta['bag_post_id']) : 0;

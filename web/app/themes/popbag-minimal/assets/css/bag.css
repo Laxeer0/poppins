@@ -130,6 +130,56 @@
 
 .popbag-bag-actions { margin-top: 18px; }
 
+.popbag-bag-notice[hidden] { display: none !important; }
+.popbag-bag-notice {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 32, 48, 0.25);
+  background: rgba(255, 32, 48, 0.08);
+  color: #003745;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.popbag-bag-modes {
+  margin: 0 0 14px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 55, 69, 0.10);
+  background: rgba(0, 55, 69, 0.03);
+}
+.popbag-bag-modes__title {
+  margin: 0 0 8px;
+  font-weight: 900;
+  color: #003745;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.popbag-bag-modes__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.popbag-bag-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 55, 69, 0.12);
+  background: #fff;
+  cursor: pointer;
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: #003745;
+}
+.popbag-bag-mode input { accent-color: #FF2030; }
+
 .popbag-bag-submit {
   width: 100%;
   border-radius: 999px;
