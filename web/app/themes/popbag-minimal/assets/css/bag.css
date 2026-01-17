@@ -180,6 +180,21 @@
 }
 .popbag-bag-mode input { accent-color: #FF2030; }
 
+/* Desktop: keep mode pills on a single line (no wrap). */
+@media (min-width: 768px) {
+  .popbag-bag-modes__options {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+
+  .popbag-bag-mode {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
 .popbag-bag-submit {
   width: 100%;
   border-radius: 999px;
