@@ -12,7 +12,6 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 	<section class="relative overflow-hidden bg-white">
 		<div class="mx-auto flex max-w-6xl flex-col justify-center gap-10 px-6 pb-12 pt-6 md:flex-row md:items-center md:py-16">
 			<div class="max-w-2xl space-y-4 text-center md:text-left">
-				<p class="m-0 text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Scopri la bag</p>
 				<h1 class="m-0 font-display text-5xl font-black leading-tight text-[#003745] popbag-stroke-yellow md:text-6xl">Crea la tua Bag</h1>
 				<p class="m-0 text-lg text-[#1F525E]">Scegli una bag, seleziona i capi disponibili e aggiungila al carrello: paghi solo il prezzo della bag e trovi al suo interno l’elenco dei capi scelti.</p>
 				<div class="flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
@@ -45,7 +44,7 @@ $shop_url      = function_exists('wc_get_page_permalink') ? wc_get_page_permalin
 				<div>
 					<?php if (!empty($bags)) : ?>
 						<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bag</p>
-						<h2 class="mt-0 text-4xl font-black text-[#003745] popbag-stroke-yellow md:text-5xl">Scegli la tua bag</h2>
+						<h2 class="mt-0 text-4xl font-black text-[#003745] popbag-stroke-yellow md:text-5xl">Le nostre bag</h2>
 					<?php else : ?>
 						<p class="text-xl font-extrabold uppercase tracking-[0.3em] text-[#F9E2B0] popbag-stroke-blue">Bag</p>
 						<h2 class="mt-0 text-4xl font-black text-[#003745] popbag-stroke-yellow md:text-5xl">Bag</h2>

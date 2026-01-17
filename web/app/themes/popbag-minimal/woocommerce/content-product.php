@@ -22,7 +22,7 @@ $is_new = (time() - $product->get_date_created()->getTimestamp()) < DAY_IN_SECON
 				</div>
 			</div>
 			<div class="flex items-start justify-between gap-4">
-				<h2 class="text-lg font-black text-[#003745] underline-offset-4 transition group-hover:underline"><?php the_title(); ?></h2>
+				<h2 class="text-lg font-black text-[#003745]"><?php the_title(); ?></h2>
 				<div class="text-sm font-semibold text-[#1F525E]"><?php woocommerce_template_loop_price(); ?></div>
 			</div>
 		</a>

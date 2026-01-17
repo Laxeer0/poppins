@@ -24,7 +24,7 @@ if (!defined('ABSPATH')) {
 			<div class="order-3 flex items-center justify-end gap-2 md:order-3 md:justify-self-end md:gap-3">
 				<?php if (is_user_logged_in()) : ?>
 					<a class="flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/30 hover:shadow-sm" href="<?php echo esc_url($myaccount_url); ?>" aria-label="<?php echo esc_attr__('My account', 'woocommerce'); ?>">
-						<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 1 0-16 0"></path>
 							<path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"></path>
 						</svg>
@@ -42,7 +42,7 @@ if (!defined('ABSPATH')) {
 				<?php endif; ?>
 
 				<a href="<?php echo esc_url($cart_url); ?>" class="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#003745]/15 bg-white text-[#003745] transition hover:-translate-y-px hover:border-[#003745]/30 hover:shadow-sm">
-					<svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+					<svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
 						<path d="M3 4h2l1.6 9.2a1 1 0 0 0 1 .8h7.8a1 1 0 0 0 1-.8L17 7H6"></path>
 						<circle cx="9" cy="19" r="1"></circle>
 						<circle cx="15" cy="19" r="1"></circle>

@@ -23,7 +23,6 @@ get_header('shop');
 			</div>
 			<div class="flex items-center gap-4">
 				<?php woocommerce_catalog_ordering(); ?>
-				<?php woocommerce_result_count(); ?>
 			</div>
 		</header>
 

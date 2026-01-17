@@ -24,11 +24,6 @@ global $product;
 	<?php endif; ?>
 
 	<?php
-	$cats = wc_get_product_category_list($product->get_id(), ', ', '<span class="posted_in"><span class="font-semibold">' . _n('Category:', 'Categories:', count($product->get_category_ids()), 'woocommerce') . '</span> ', '</span>');
-	if ($cats) {
-		echo '<p class="m-0">' . wp_kses_post($cats) . '</p>';
-	}
-
 	$tags = wc_get_product_tag_list($product->get_id(), ', ', '<span class="tagged_as"><span class="font-semibold">' . _n('Tag:', 'Tags:', count($product->get_tag_ids()), 'woocommerce') . '</span> ', '</span>');
 	if ($tags) {
 		echo '<p class="m-0 mt-2">' . wp_kses_post($tags) . '</p>';

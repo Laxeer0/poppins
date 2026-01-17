@@ -30,7 +30,7 @@ $is_new = (time() - $product->get_date_created()->getTimestamp()) < DAY_IN_SECON
 			</div>
 		</div>
 		<div class="flex items-start justify-between gap-4">
-			<h3 class="text-lg font-black text-[#003745] underline-offset-4 transition group-hover:underline">
+			<h3 class="text-lg font-black text-[#003745]">
 				<?php echo esc_html($product->get_name()); ?>
 			</h3>
 			<span class="text-sm font-semibold text-[#1F525E]"><?php echo wp_kses_post($product->get_price_html()); ?></span>

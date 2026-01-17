@@ -84,6 +84,28 @@ add_action('customize_register', static function (WP_Customize_Manager $wp_custo
 		'type'    => 'text',
 	]);
 
+	// Business info (optional, for footer + SEO schema).
+	foreach ([
+		'popbag_business_legal_name' => __('Legal business name (optional)', 'popbag-minimal'),
+		'popbag_business_vat'        => __('VAT / P.IVA (optional)', 'popbag-minimal'),
+		'popbag_business_street'     => __('Address (street) (optional)', 'popbag-minimal'),
+		'popbag_business_city'       => __('Address (city) (optional)', 'popbag-minimal'),
+		'popbag_business_region'     => __('Address (region) (optional)', 'popbag-minimal'),
+		'popbag_business_postal'     => __('Address (postal code) (optional)', 'popbag-minimal'),
+		'popbag_business_country'    => __('Address (country code, e.g. IT) (optional)', 'popbag-minimal'),
+	] as $key => $label) {
+		$wp_customize->add_setting($key, [
+			'type'              => 'theme_mod',
+			'sanitize_callback' => 'sanitize_text_field',
+			'default'           => '',
+		]);
+		$wp_customize->add_control($key, [
+			'section' => 'popbag_theme_options',
+			'label'   => $label,
+			'type'    => 'text',
+		]);
+	}
+
 	// Socials.
 	foreach ([
 		'instagram' => __('Instagram URL', 'popbag-minimal'),
