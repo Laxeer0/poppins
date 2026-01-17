@@ -1,4 +1,18 @@
 (() => {
+  // Expose header height as a CSS variable so hero sections can center correctly below a sticky header.
+  const header = document.querySelector('header');
+  const setHeaderHeightVar = () => {
+    if (!header) return;
+    const h = Math.ceil(header.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--popbag-header-h', `${h}px`);
+  };
+
+  setHeaderHeightVar();
+  window.addEventListener('resize', setHeaderHeightVar, { passive: true });
+  if (window.ResizeObserver && header) {
+    new ResizeObserver(setHeaderHeightVar).observe(header);
+  }
+
   const toggles = document.querySelectorAll('[data-popbag-menu-toggle]');
   const panel = document.querySelector('[data-popbag-menu-panel]');
   const backdrop = document.querySelector('[data-popbag-menu-backdrop]');
