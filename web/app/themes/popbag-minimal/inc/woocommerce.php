@@ -164,4 +164,81 @@ add_action('woocommerce_after_main_content', static function (): void {
 	echo '</div></main>';
 }, 99);
 
+/**
+ * WooCommerce "Coming soon" page (theme-styled).
+ *
+ * WooCommerce stores the setting in:
+ * - woocommerce_coming_soon: yes|no
+ * - woocommerce_store_pages_only: yes|no
+ */
+function popbag_is_woocommerce_coming_soon_enabled(): bool {
+	return 'yes' === (string) get_option('woocommerce_coming_soon', 'no');
+}
+
+function popbag_is_woocommerce_request(): bool {
+	if (!function_exists('is_woocommerce')) {
+		return false;
+	}
+
+	return (bool) (
+		is_woocommerce()
+		|| (function_exists('is_cart') && is_cart())
+		|| (function_exists('is_checkout') && is_checkout())
+		|| (function_exists('is_account_page') && is_account_page())
+	);
+}
+
+function popbag_current_user_can_bypass_coming_soon(): bool {
+	// Match typical Woo/admin expectations: admins/shop managers can view the site.
+	return is_user_logged_in()
+		&& (current_user_can('manage_woocommerce') || current_user_can('manage_options'));
+}
+
+add_action('template_redirect', static function (): void {
+	if (!popbag_is_woocommerce_coming_soon_enabled()) {
+		return;
+	}
+
+	// Never affect admin, cron, or AJAX/REST endpoints.
+	if (is_admin() || (defined('DOING_CRON') && DOING_CRON)) {
+		return;
+	}
+	if ((defined('REST_REQUEST') && REST_REQUEST) || str_starts_with((string) ($_SERVER['REQUEST_URI'] ?? ''), '/wp-json/')) {
+		return;
+	}
+	if (defined('DOING_AJAX') && DOING_AJAX) {
+		return;
+	}
+	// WooCommerce AJAX endpoints define WC_DOING_AJAX and/or pass wc-ajax query var.
+	$wc_doing_ajax = defined('WC_DOING_AJAX') ? (bool) constant('WC_DOING_AJAX') : false;
+	if ($wc_doing_ajax || isset($_GET['wc-ajax'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return;
+	}
+
+	// Allow privileged users to bypass.
+	if (popbag_current_user_can_bypass_coming_soon()) {
+		return;
+	}
+
+	// If WooCommerce is configured to hide store pages only, intercept only Woo routes.
+	$store_pages_only = 'yes' === (string) get_option('woocommerce_store_pages_only', 'no');
+	if ($store_pages_only && !popbag_is_woocommerce_request()) {
+		return;
+	}
+
+	// Prevent admin bar from shifting layout for logged-in non-privileged users.
+	add_filter('show_admin_bar', '__return_false', 999);
+
+	if (!defined('POPBAG_WC_COMING_SOON')) {
+		define('POPBAG_WC_COMING_SOON', true);
+	}
+
+	$template = get_theme_file_path('template-parts/coming-soon.php');
+	if (file_exists($template)) {
+		nocache_headers();
+		require $template;
+		exit;
+	}
+}, 0);
+
 

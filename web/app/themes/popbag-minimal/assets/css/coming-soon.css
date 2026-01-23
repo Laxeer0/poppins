@@ -1,0 +1,45 @@
+.popbag-coming-soon {
+  min-height: 100vh;
+  background: #ff2030;
+}
+
+.popbag-coming-soon__wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.popbag-coming-soon__inner {
+  width: 100%;
+  max-width: 560px;
+  text-align: center;
+}
+
+.popbag-coming-soon__logo a {
+  display: inline-block;
+}
+
+.popbag-coming-soon__logo img,
+.popbag-coming-soon__logo .custom-logo {
+  display: inline-block;
+  width: min(320px, 80vw);
+  height: auto;
+}
+
+.popbag-coming-soon__text {
+  margin-top: 18px;
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .popbag-coming-soon__text {
+    font-size: 16px;
+  }
+}
+

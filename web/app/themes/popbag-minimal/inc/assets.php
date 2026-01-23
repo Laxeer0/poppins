@@ -92,6 +92,15 @@ add_action('wp_enqueue_scripts', static function (): void {
 			wp_enqueue_script('popbag-woo-single-product', get_theme_file_uri($product_js_rel), [], (string) filemtime($product_js_path), true);
 		}
 	}
+
+	// WooCommerce Coming soon page styling (theme override).
+	if (defined('POPBAG_WC_COMING_SOON') && POPBAG_WC_COMING_SOON) {
+		$cs_css_rel  = 'assets/css/coming-soon.css';
+		$cs_css_path = get_theme_file_path($cs_css_rel);
+		if (file_exists($cs_css_path)) {
+			wp_enqueue_style('popbag-coming-soon', get_theme_file_uri($cs_css_rel), ['popbag-app'], (string) filemtime($cs_css_path));
+		}
+	}
 });
 
 
